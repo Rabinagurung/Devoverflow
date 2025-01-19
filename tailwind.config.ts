@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,15 +11,15 @@ export default {
     extend: {
       colors: {
         primary: {
-          100: "#FFF1E6",
-          500: "#FF7000",
+          "100": "#FFF1E6",
+          "500": "#FF7000",
         },
         dark: {
-          100: "#000000",
-          200: "#0F1117",
-          300: "#151821",
-          400: "#212734",
-          500: "#101012",
+          "100": "#000000",
+          "200": "#0F1117",
+          "300": "#151821",
+          "400": "#212734",
+          "500": "#101012",
         },
         light: {
           "400": "#858EAD",
@@ -29,7 +30,6 @@ export default {
           "900": "#FFFFFF",
         },
       },
-
       borderRadius: {
         "2": "8px",
         "1.5": "6px",
@@ -37,7 +37,6 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-
       boxShadow: {
         "light-100":
           "0px 12px 20px 0px rgba(184, 184, 184, 0.03), 0px 6px 12px 0px rgba(184, 184, 184, 0.02), 0px 2px 4px 0px rgba(184, 184, 184, 0.03)",
@@ -46,21 +45,18 @@ export default {
         "dark-100": "0px 2px 10px 0px rgba(46, 52, 56, 0.10)",
         "dark-200": "2px 0px 20px 0px rgba(39, 36, 36, 0.04)",
       },
-
       backgroundImage: {
         "auth-dark": 'url("/images/auth-dark.png")',
         "auth-light": 'url("/images/auth-light.png")',
       },
-
       screens: {
         xs: "420px",
       },
-
       fontFamily: {
         inter: ["var(--font-inter)"],
         "space-grotesk": ["var(--font-space-grotesk)"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
