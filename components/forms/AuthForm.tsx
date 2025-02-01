@@ -45,7 +45,7 @@ const AuthForm = <T extends FieldValues>({
     : buttonTextMap[formType].default;
 
   const handleSubmit: SubmitHandler<T> = async () => {
-    // TODO
+    //  TODO
   };
 
   return (
@@ -60,7 +60,7 @@ const AuthForm = <T extends FieldValues>({
             control={form.control}
             name={field as Path<T>}
             render={({ field }) => (
-              <FormItem className="flex flex-col w-full gap-2.5">
+              <FormItem className="flex w-full flex-col gap-2.5">
                 <FormLabel className="paragraph-medium text-dark400_light700">
                   {field.name === "email"
                     ? "Email Address"
@@ -71,7 +71,7 @@ const AuthForm = <T extends FieldValues>({
                     required
                     type={field.name === "password" ? "password" : "text"}
                     {...field}
-                    className="px-4 py-6 min-h-12 border paragraph-regular light-border-2 text-dark300_light700 no-focus background-light900_dark300 rounded-1.5"
+                    className="paragraph-regular light-border-2 text-dark300_light700 no-focus background-light900_dark300 min-h-12 rounded-1.5 border px-4 py-6"
                   />
                 </FormControl>
               </FormItem>
@@ -80,34 +80,34 @@ const AuthForm = <T extends FieldValues>({
         ))}
 
         {formType === "SIGN_IN" && (
-          <Link href={"/forget"} className="inline-block body-medium">
+          <Link href={"/forget"} className="body-medium inline-block">
             Forget Password ?
           </Link>
         )}
 
         <Button
           disabled={form.formState.isSubmitting}
-          className="primary-gradient w-full min-h-12 px-4 py-3 paragraph-medium !text-light-900 font-inter rounded-2"
+          className="primary-gradient paragraph-medium min-h-12 w-full rounded-2 px-4 py-3 font-inter !text-light-900"
         >
           {buttonText}
         </Button>
 
         {formType === "SIGN_IN" ? (
-          <p className="text-center text-dark400_light700 font-inter">
-            Don't have an account?{" "}
+          <p className="text-dark400_light700 text-center font-inter">
+            Do not have an account?{" "}
             <Link
               href={ROUTES.SIGN_UP}
-              className="font-semibold paragraph-semibold font-inter primary-text-gradient "
+              className="paragraph-semibold primary-text-gradient font-inter font-semibold "
             >
               Sign Up
             </Link>{" "}
           </p>
         ) : (
-          <p className="text-center text-dark400_light700 font-inter">
+          <p className="text-dark400_light700 text-center font-inter">
             Already have an account?{" "}
             <Link
               href={ROUTES.SIGN_IN}
-              className="font-semibold paragraph-semibold font-inter primary-text-gradient "
+              className="paragraph-semibold primary-text-gradient font-inter font-semibold "
             >
               Sign In
             </Link>{" "}

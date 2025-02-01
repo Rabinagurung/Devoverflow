@@ -12,10 +12,6 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const pathName = usePathname();
   const userId = 1;
 
-  sidebarLinks.map((item) => {
-    item.route.includes("jobs") ? console.log(item.route) : "";
-  });
-
   return (
     <>
       {sidebarLinks.map((item) => {
@@ -37,7 +33,7 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               isActive
                 ? "primary-gradient p-4 rounded-lg text-light-900"
                 : "text-dark300_light900",
-              "flex items-center justify-start gap-4 bg-transparent p-4  "
+              "flex items-center justify-start gap-4 bg-transparent p-4"
             )}
           >
             <Image

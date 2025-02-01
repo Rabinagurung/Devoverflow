@@ -38,7 +38,7 @@
   }
 
   .background-light800_dark300 {
-    @apply bg-light-800 dark:bg-dark-300;
+    @apply bg-light-800 dark:bg-dark-300 !important;
   }
 
   .background-light800_dark200 {
@@ -58,7 +58,7 @@
   }
 
   .text-dark200_light900 {
-    @apply text-dark-200 dark:text-light-900;
+    @apply text-dark-200 dark:text-light-900 !important;
   }
 
   .text-dark300_light900 {
