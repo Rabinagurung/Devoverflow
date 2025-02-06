@@ -90,7 +90,7 @@
   }
 
   .text-dark500_light500 {
-    @apply text-dark-500 dark:text-light-500;
+    @apply text-dark-500 dark:text-light-500 !important;
   }
 
   .text-dark400_light500 {
@@ -103,6 +103,10 @@
 
   .text-light400_light500 {
     @apply text-light-400 dark:text-light-500 !important;
+  }
+
+  .text-light500_light500 {
+    @apply text-light-500 dark:text-light-500 !important;
   }
 
   .h1-bold {
