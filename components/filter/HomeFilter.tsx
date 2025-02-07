@@ -49,7 +49,7 @@ const HomeFilter = () => {
           key={filter.name}
           onClick={() => handleButtonClick(filter.value)}
           className={cn(
-            ` body-medium rounded-lg shadow-none px-6 py-3 `,
+            `body-medium rounded-lg shadow-none px-6 py-3 `,
             active === filter.value
               ? "text-primary-500 bg-primary-100 hover:bg-primary-100 dark:bg-dark-400 dark:text-primary-500 dark:hover:bg-dark-400"
               : "text-light500_light500 background-light800_dark300 hover:bg-light-800 dark:hover:bg-dark-300"

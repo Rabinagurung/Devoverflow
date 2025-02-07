@@ -40,14 +40,6 @@ const compat = new FlatCompat({
     ],
   },
   ignorePatterns: ["components/ui/**"],
-  overrides: [
-    {
-      files: ["*.ts", "*.tsx"],
-      rules: {
-        "no-undef": "off",
-      },
-    },
-  ],
 });
 
 const eslintConfig = [
@@ -58,6 +50,16 @@ const eslintConfig = [
     "plugin:tailwindcss/recommended",
     "prettier"
   ),
+  {
+    overrides: [
+      {
+        files: ["*.ts", "*.tsx"],
+        rules: {
+          "no-undef": "off",
+        },
+      },
+    ],
+  },
 ];
 
 export default eslintConfig;

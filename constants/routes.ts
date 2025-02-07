@@ -4,6 +4,7 @@ const ROUTES = {
   SIGN_UP: "/sign-up",
   QUESTIONS: (id: string) => `/questions/${id}`,
   ASK_QUESTION: "/ask-question",
+  PROFILE: (_id: string) => `/profile/${_id}`,
   TAGS: (id: string) => `/tags/${id}`,
 };
 

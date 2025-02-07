@@ -39,3 +39,5 @@ export function deleteUrlQuery({ params, keysToRemove }: DeleteUrlQueryProps) {
     { skipNull: true }
   );
 }
+
+// stringyUrl converts parsed JS object (queryString) into string and creates new URL.

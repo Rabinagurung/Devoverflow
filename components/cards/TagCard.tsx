@@ -7,9 +7,9 @@ import { getDevIconClassName } from "@/lib/utils";
 interface TagCardProps {
   id: string;
   name: string;
-  questions: number;
-  showCount: boolean;
-  compact: boolean;
+  questions?: number;
+  showCount?: boolean;
+  compact?: boolean;
 }
 
 const TagCard = ({ id, name, questions, showCount, compact }: TagCardProps) => {

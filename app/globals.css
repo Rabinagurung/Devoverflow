@@ -82,7 +82,7 @@
   }
 
   .text-dark400_light700 {
-    @apply text-dark-400 dark:text-light-700;
+    @apply text-dark-400 dark:text-light-700 !important;
   }
 
   .text-dark500_light700 {
