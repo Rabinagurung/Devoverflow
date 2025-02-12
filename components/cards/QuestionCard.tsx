@@ -1,12 +1,11 @@
-import React from "react";
-import { Button } from "../ui/button";
-import { getTimeStamp } from "@/lib/utils";
 import Link from "next/link";
-import { title } from "process";
+import React from "react";
+
 import ROUTES from "@/constants/routes";
+import { getTimeStamp } from "@/lib/utils";
+
 import TagCard from "./TagCard";
 import Metric from "../Metric";
-import { date } from "zod";
 
 const filters = [
   { name: "React.JS", value: "react" },
@@ -24,7 +23,7 @@ const QuestionCard = ({
     <div className="card-wrapper rounded-[10px] p-9 sm:px-[45px]">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
-          <span className="subtle-regular text-dark400_light700 flex line-clamp-1 sm:hidden">
+          <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
             {getTimeStamp(createdAt)}
           </span>
           <Link href={ROUTES.QUESTIONS(_id)}>
@@ -35,7 +34,7 @@ const QuestionCard = ({
         </div>
       </div>
 
-      <div className="mt-3.5 flex flex-wrap w-full gap-2">
+      <div className="mt-3.5 flex w-full flex-wrap gap-2">
         {tags.map((tag: Tag) => (
           <TagCard key={tag._id} id={tag._id} name={tag.name} compact />
         ))}

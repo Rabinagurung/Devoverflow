@@ -1,5 +1,4 @@
 "use client";
-
 import {
   DefaultValues,
   FieldValues,
@@ -22,6 +21,11 @@ interface AuthFormProps<T extends FieldValues> {
   onSubmit: (data: T) => Promise<{ success: boolean; data: T }>;
 }
 
+const buttonTextMap = {
+  SIGN_IN: { default: "Sign In", loading: "Signing In..." },
+  SIGN_UP: { default: "Sign Up", loading: "Signing Up..." },
+};
+
 const AuthForm = <T extends FieldValues>({
   schema,
   formType,
@@ -29,16 +33,10 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: AuthFormProps<T>) => {
   // Initialize RHF and prepare to track fields dynamically
-
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
-
-  const buttonTextMap = {
-    SIGN_IN: { default: "Sign In", loading: "Signing In..." },
-    SIGN_UP: { default: "Sign Up", loading: "Signing Up..." },
-  };
 
   const buttonText = form.formState.isSubmitting
     ? buttonTextMap[formType].loading
@@ -100,7 +98,7 @@ const AuthForm = <T extends FieldValues>({
               className="paragraph-semibold primary-text-gradient font-inter font-semibold "
             >
               Sign Up
-            </Link>{" "}
+            </Link>
           </p>
         ) : (
           <p className="text-dark400_light700 text-center font-inter">
@@ -110,7 +108,7 @@ const AuthForm = <T extends FieldValues>({
               className="paragraph-semibold primary-text-gradient font-inter font-semibold "
             >
               Sign In
-            </Link>{" "}
+            </Link>
           </p>
         )}
       </form>
@@ -120,8 +118,30 @@ const AuthForm = <T extends FieldValues>({
 
 export default AuthForm;
 
-/*
+/* 1. 
+type T = {
+  username: string;
+  email: string;
+  age: number;
+};
 
+Create a Zod schema for the User type
+
+const userSchema: ZodType<T> = z.object({
+  username: z.string(),
+  email: z.string().email(),
+  age: z.number().min(18),
+});
+Here:
+
+ZodType<T> ensures that userSchema is a valid schema for the User type.
+userSchema will validate objects that match the User structure (username, email, age).
+
+Here in our case, ZodType<T> ensures is a valid schema for type T. 
+signUpSchema and signInSchema will validate objects that match the strucutre of type T. 
+*/
+
+/* 2. 
 {field} =  {
   value: "", // Comes from defaultValues
   onChange: function, // Updates form state
@@ -134,3 +154,197 @@ How does my FormField knows about all my fields?
 Because while intializing useForm() of React hook form, we pass the defaultValues
 
 */
+
+/* 3. 
+In React Hook Form, several type utilities are provided to help you manage form types and ensure type safety. These utilities are particularly useful when you're working with TypeScript to type your form data, default values, and validation rules. Here's a list of the most important ones:
+
+1. FieldValues
+Represents a generic shape of form values.
+It’s the base type for form data.
+Usage:
+typescript
+Copy
+Edit
+import { FieldValues } from "react-hook-form";
+
+type MyFormValues = FieldValues;  // Equivalent to Record<string, any>
+
+
+2. DefaultValues<T>
+Ensures that your defaultValues match the shape and type of the form data (T).
+Usage:
+typescript
+Copy
+Edit
+import { DefaultValues, useForm } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+const defaultValues: DefaultValues<SignUpForm> = {
+  username: "",
+  email: "",
+  password: "",
+};
+
+const form = useForm<SignUpForm>({
+  defaultValues,
+});
+
+
+3. FieldPath<T>
+Returns a union of all valid keys from a form data type (T).
+Useful for ensuring that dynamic field names are type-safe.
+Usage:
+typescript
+Copy
+Edit
+import { FieldPath } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type UsernamePath = FieldPath<SignUpForm>;  // "username" | "email" | "password"
+
+const field: UsernamePath = "username";  // ✅ Valid
+const field2: UsernamePath = "age";      // ❌ Error: "age" is not a valid field
+4. FieldPathValue<T, P>
+Retrieves the type of a specific field (P) in the form data type (T).
+Usage:
+typescript
+Copy
+Edit
+import { FieldPathValue } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type EmailType = FieldPathValue<SignUpForm, "email">;  // string
+5. FieldArrayPath<T>
+Returns a union of keys that represent array fields in your form data.
+Usage:
+typescript
+Copy
+Edit
+import { FieldArrayPath } from "react-hook-form";
+
+type FormWithArrays = {
+  users: { name: string; age: number }[];
+  tags: string[];
+};
+
+type ArrayPath = FieldArrayPath<FormWithArrays>;  // "users" | "tags"
+6. FieldArrayPathValue<T, P>
+Returns the type of elements in an array field for the specified path.
+Usage:
+typescript
+Copy
+Edit
+import { FieldArrayPathValue } from "react-hook-form";
+
+type FormWithArrays = {
+  users: { name: string; age: number }[];
+  tags: string[];
+};
+
+type UserType = FieldArrayPathValue<FormWithArrays, "users">;  // { name: string; age: number }
+7. UseFormReturn<T>
+Represents the return type of useForm when called with a specific form data type (T).
+This type contains all the methods and properties returned by useForm.
+Usage:
+typescript
+Copy
+Edit
+import { UseFormReturn, useForm } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+const form: UseFormReturn<SignUpForm> = useForm<SignUpForm>();
+8. UseFieldArrayReturn<T>
+Represents the return type of useFieldArray, helping manage array fields in your form.
+Usage:
+typescript
+Copy
+Edit
+import { UseFieldArrayReturn } from "react-hook-form";
+
+type FormWithArrays = {
+  users: { name: string; age: number }[];
+};
+
+const fieldArray: UseFieldArrayReturn<FormWithArrays, "users"> = useFieldArray({
+  name: "users",
+});
+9. Path<T> (Alias for FieldPath<T>)
+Returns a type-safe string representing a valid path in T. Commonly used for form fields.
+Usage:
+typescript
+Copy
+Edit
+import { Path } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  profile: {
+    age: number;
+  };
+};
+
+type ProfilePath = Path<SignUpForm>;  // "username" | "profile" | "profile.age"
+10. DeepPartial<T>
+Represents a partial version of a form data type, where all fields are optional (including nested fields).
+Usage:
+typescript
+Copy
+Edit
+import { DeepPartial } from "react-hook-form";
+
+type SignUpForm = {
+  username: string;
+  profile: {
+    age: number;
+    bio: string;
+  };
+};
+
+const partialForm: DeepPartial<SignUpForm> = {
+  username: "Ram",
+  profile: {
+    age: 25,
+  },
+};
+
+Summary of Key Utilities: 
+
+
+Utility	Description: 
+
+
+FieldValues	Represents the base shape for form values (Record<string, any>)
+DefaultValues<T>	Ensures defaultValues match the form data type T
+FieldPath<T>	Type-safe union of keys from T
+FieldPathValue<T, P>	Returns the type of a specific field in T
+FieldArrayPath<T>	Union of keys that are arrays in T
+FieldArrayPathValue<T, P>	Type of elements in an array field
+UseFormReturn<T>	Represents the return type of useForm
+DeepPartial<T>	Makes all fields in T optional (including nested fields)
+Why Use These Utilities?
+Type-Safe Forms: Avoid runtime errors by ensuring your form fields and data structures match.
+Better Developer Experience: Autocomplete and type-checking help prevent mistakes.
+Dynamic Field Handling: Utilities like FieldPath make working with dynamic fields easier.
+
+
+Let me know if you want examples focusing on specific utilities, like useForm or useFieldArray, with Zod! 😊 */
