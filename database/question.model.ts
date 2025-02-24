@@ -1,7 +1,7 @@
 import { model, models, Schema, Types } from "mongoose";
 import { number } from "zod";
 
-interface IQuestion {
+export interface IQuestion {
   title: string;
   content: string;
   author: Types.ObjectId;
@@ -12,7 +12,7 @@ interface IQuestion {
   downVotes: number;
 }
 
-interface Answers {}
+export interface IQuestionDoc extends IQuestion, Document {}
 
 const QuestionSchema = new Schema<IQuestion>(
   {

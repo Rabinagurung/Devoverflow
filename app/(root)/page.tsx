@@ -3,6 +3,9 @@ import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import handleError from "@/lib/handlers/error";
+import { RequestError, ValidationError } from "@/lib/http-error";
+import dbConnect from "@/lib/mongoose";
 import Link from "next/link";
 
 interface SearchParams {
@@ -50,8 +53,17 @@ const questions = [
   },
 ];
 
+const test = async () => {
+  try {
+    throw new Error("Test error");
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 const Home = async ({ searchParams }: SearchParams) => {
   const { query = "", filter = "" } = await searchParams;
+  const result = await test();
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title
