@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { RequestError, ValidationError } from "../http-error";
+import { NotFoundError, RequestError, ValidationError } from "../http-error";
 import { ZodError } from "zod";
 import logger from "../logger";
+import dbConnect from "../mongoose";
+import User from "@/database/user.model";
 
 export type ResponseType = "api" | "server";
 
