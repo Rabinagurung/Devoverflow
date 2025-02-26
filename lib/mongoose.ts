@@ -1,5 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
-import { logger } from "./logger";
+import logger from "./logger";
 
 // connection string
 

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 import { signIn } from "next-auth/react";
 import ROUTES from "@/constants/routes";
+import logger from "@/lib/logger";
 
 const SocialAuthForm = () => {
   const buttonClass =
@@ -18,7 +19,7 @@ const SocialAuthForm = () => {
         redirect: false,
       });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
 
       toast({
         title: "Sign-in Failed",

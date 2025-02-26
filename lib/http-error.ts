@@ -21,6 +21,7 @@ export class ValidationError extends RequestError {
     const message = ValidationError.formatFieldErrors(fieldErrors);
     super(400, message, fieldErrors);
     this.name = "ValidationError";
+    this.errors = fieldErrors;
   }
 
   static formatFieldErrors(errors: Record<string, string[]>): string {

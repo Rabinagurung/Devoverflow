@@ -1,9 +1,10 @@
+import { decodeAction } from "next/dist/server/app-render/entry-base";
 import pino from "pino";
 
 const isEdge = process.env.NEXT_RUNTIME === "edge";
 const isProduction = process.env.NODE_ENV === "production";
 
-export const logger = pino({
+const logger = pino({
   level: process.env.LOG_LEVEL || "info",
   transport:
     !isEdge && !isProduction
@@ -21,3 +22,5 @@ export const logger = pino({
   },
   timestamp: pino.stdTimeFunctions.isoTime,
 });
+
+export default logger;

@@ -53,17 +53,17 @@ const questions = [
   },
 ];
 
-const test = async () => {
-  try {
-    throw new Error("Test error");
-  } catch (error) {
-    return handleError(error);
-  }
-};
+// const test = async () => {
+//   try {
+//     throw new Error("Test error");
+//   } catch (error) {
+//     return handleError(error);
+//   }
+// };
 
 const Home = async ({ searchParams }: SearchParams) => {
   const { query = "", filter = "" } = await searchParams;
-  const result = await test();
+  // const result = await test();
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title
