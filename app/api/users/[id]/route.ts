@@ -1,5 +1,3 @@
-// Get users by id. /api/users/[id]
-
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 
@@ -10,6 +8,7 @@ import { ApiErrorResponse } from "@/types/gloabl";
 import { request } from "http";
 import { NextResponse } from "next/server";
 
+// Get users by id. /api/users/[id]
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -55,7 +54,7 @@ export async function DELETE(
   }
 }
 
-// Update user by id
+// Update user by id /api/users/[id]
 
 export async function PUT(
   request: Request,

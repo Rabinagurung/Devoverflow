@@ -1,4 +1,5 @@
-import { z } from "zod";
+import { M_PLUS_1 } from "next/font/google";
+import { Schema, z } from "zod";
 
 export const signInSchema = z.object({
   email: z
@@ -97,4 +98,35 @@ export const UserSchema = z.object({
     .url({ message: "Please provide a valid URL." })
     .optional(),
   reputation: z.number().optional(),
+});
+
+export const AccountSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is requirex" }),
+  name: z
+    .string()
+    .min(1, { message: "Name is required" })
+    .max(50, { message: "Name cannot exceed 50 characters." })
+    .regex(/^[a-zA-Z\s]+$/, {
+      message: "Name can only contain letters and spaces.",
+    }),
+  image: z.string().url({ message: "Please provide a valid URL." }).optional(),
+  password: z
+    .string()
+    .min(6, { message: "Paasoword must be six characters long." })
+    .max(100, { message: "Password cannot exceed 100 characters." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .regex(/[0-9]/, { message: "Password must contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: "Password must contain at least one special character.",
+    })
+    .optional(),
+  provider: z.string().min(1, { message: "Provider is required" }),
+  providerAccountId: z
+    .string()
+    .min(1, { message: "Provider Account Id is required" }),
 });

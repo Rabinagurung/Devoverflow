@@ -7,6 +7,7 @@ import { ApiErrorResponse } from "@/types/gloabl";
 import { error } from "console";
 import { NextResponse } from "next/server";
 
+//  Get users details by email
 export async function POST(request: Request) {
   const { email } = await request.json();
   try {
