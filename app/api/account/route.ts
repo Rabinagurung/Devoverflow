@@ -1,7 +1,7 @@
 import Account from "@/database/account.model";
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
-import { ForbiddenError, NotFoundError } from "@/lib/http-error";
+import { ForbiddenError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { AccountSchema } from "@/lib/validations";
 
