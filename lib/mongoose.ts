@@ -1,8 +1,8 @@
 import mongoose, { Mongoose } from "mongoose";
+
 import logger from "./logger";
 
 // connection string
-
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 if (!MONGODB_URI) {

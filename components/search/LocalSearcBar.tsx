@@ -1,9 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Input } from "../ui/input";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
 import { deleteUrlQuery, formUrlQuery } from "@/lib/url";
+
+import { Input } from "../ui/input";
 
 interface Props {
   route: string;

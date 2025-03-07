@@ -1,7 +1,9 @@
-import ROUTES from "@/constants/routes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
+import ROUTES from "@/constants/routes";
+
 import TagCard from "../cards/TagCard";
 
 const hotQuestions = [
@@ -23,19 +25,19 @@ const popularTags = [
 const RightSideBar = () => {
   return (
     <section
-      className="flex flex-col max-xl:hidden background-light900_dark200 w-[350px] h-screen border-l light-border
-     shadow-light-300 dark:shadow-none pt-36 p-6 custom-scrollbar sticky top-0 right-0 overflow-y-auto"
+      className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen
+     w-[350px] flex-col overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden"
     >
       <div>
-        <h3 className="h3-bold font-inter text-dark200_light900">
+        <h3 className="h3-bold text-dark200_light900 font-inter">
           Top Questions
         </h3>
-        <div className="flex flex-col mt-7 gap-[30px] w-full">
+        <div className="mt-7 flex w-full flex-col gap-[30px]">
           {hotQuestions.map(({ _id, title }) => (
             <Link
               href={ROUTES.QUESTIONS(_id)}
               key={_id}
-              className="flex cursor-pointer hover:underline items-center justify-between gap-7"
+              className="flex cursor-pointer items-center justify-between gap-7 hover:underline"
             >
               <p className="body-medium text-dark500_light700">{title}</p>
               <Image
@@ -51,10 +53,10 @@ const RightSideBar = () => {
       </div>
 
       <div className="mt-16">
-        <h3 className="h3-bold font-inter text-dark200_light900">
+        <h3 className="h3-bold text-dark200_light900 font-inter">
           Popular Tags
         </h3>
-        <div className="flex flex-col mt-7 gap-4">
+        <div className="mt-7 flex flex-col gap-4">
           {popularTags.map((tag) => (
             <TagCard
               key={tag._id}

@@ -1,17 +1,18 @@
 // GET Account by Id /api/account/[id]
+import { NextResponse } from "next/server";
 
 import Account from "@/database/account.model";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { AccountSchema } from "@/lib/validations";
-import { ApiErrorResponse } from "@/types/gloabl";
-import { NextResponse } from "next/server";
-import { date } from "zod";
+
+
+
 
 export async function GET(
-  _: Request,
-  { params }: { params: Promise<{ id: string }> }
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
   if (!id) throw new NotFoundError("Account");
@@ -31,8 +32,8 @@ export async function GET(
 // DELETE Account by ID /api/account/[id]
 
 export async function DELETE(
-  _: Request,
-  { params }: { params: Promise<{ id: string }> }
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -50,11 +51,11 @@ export async function DELETE(
   }
 }
 
-//UPDATE THE ACCOUNT
+// UPDATE THE ACCOUNT
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
   if (id) throw new NotFoundError("Account");
@@ -76,7 +77,7 @@ export async function PUT(
 
     return NextResponse.json(
       { success: true, date: updatedAccount },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;

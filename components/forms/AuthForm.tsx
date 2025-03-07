@@ -1,4 +1,6 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import {
   DefaultValues,
   FieldValues,
@@ -6,13 +8,15 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { z, ZodType } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import Link from "next/link";
+
 import ROUTES from "@/constants/routes";
+
+import { Button } from "../ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Input } from "../ui/input";
+
+
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
@@ -30,7 +34,7 @@ const AuthForm = <T extends FieldValues>({
   schema,
   formType,
   defaultValues,
-  onSubmit,
+  
 }: AuthFormProps<T>) => {
   // Initialize RHF and prepare to track fields dynamically
   const form = useForm<z.infer<typeof schema>>({

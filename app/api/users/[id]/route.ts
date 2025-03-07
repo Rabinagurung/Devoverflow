@@ -1,17 +1,16 @@
+import { NextResponse } from "next/server";
+
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
-
-import { NotFoundError, ValidationError } from "@/lib/http-error";
+import { NotFoundError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
-import { ApiErrorResponse } from "@/types/gloabl";
-import { request } from "http";
-import { NextResponse } from "next/server";
+
 
 // Get users by id. /api/users/[id]
 export async function GET(
   _: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -34,7 +33,7 @@ export async function GET(
 
 export async function DELETE(
   _: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
   if (!id) throw new NotFoundError("User");
@@ -58,7 +57,7 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -78,7 +77,7 @@ export async function PUT(
 
     return NextResponse.json(
       { success: true, data: updatedUser },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;

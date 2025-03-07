@@ -15,7 +15,7 @@ const CollectionSchema = new Schema<ICollection>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Collection =

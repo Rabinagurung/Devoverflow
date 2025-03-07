@@ -5,4 +5,5 @@ import Google from "next-auth/providers/google";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub, Google],
 });
+
 // auth: provided information aboout current session. It is imported in middleware.ts file

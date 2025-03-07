@@ -1,11 +1,15 @@
+
+
 import type { Metadata } from "next";
 import { Space_Grotesk as SpaceGrotesk, Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import React from "react";
-import ThemeProvider from "@/context/Theme";
-import { Toaster } from "@/components/ui/toaster";
-import { SessionProvider } from "next-auth/react";
+
 import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/toaster";
+import ThemeProvider from "@/context/Theme";
+
 
 const inter = Inter({
   subsets: ["latin"],

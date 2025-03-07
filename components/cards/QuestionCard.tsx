@@ -7,10 +7,7 @@ import { getTimeStamp } from "@/lib/utils";
 import TagCard from "./TagCard";
 import Metric from "../Metric";
 
-const filters = [
-  { name: "React.JS", value: "react" },
-  { name: "Javascript", value: "react" },
-];
+
 
 interface QuestionCardProps {
   question: Question;

@@ -1,10 +1,11 @@
+import { NextResponse } from "next/server";
+
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 import { ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
-import { ApiErrorResponse } from "@/types/gloabl";
-import { NextResponse } from "next/server";
+
 
 export async function GET() {
   try {
@@ -50,4 +51,6 @@ export async function POST(request: Request) {
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;
   }
+
 }
+

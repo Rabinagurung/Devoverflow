@@ -1,12 +1,14 @@
+import Link from "next/link";
+
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { api } from "@/lib/handlers/api";
 import handleError from "@/lib/handlers/error";
-import { RequestError, ValidationError } from "@/lib/http-error";
-import dbConnect from "@/lib/mongoose";
-import Link from "next/link";
+
+
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -53,17 +55,20 @@ const questions = [
   },
 ];
 
-// const test = async () => {
-//   try {
-//     throw new Error("Test error");
-//   } catch (error) {
-//     return handleError(error);
-//   }
-// };
+const test = async () => {
+  try {
+    return await api.users.getByEmail("rachana@gmail.com")
+  } catch (error) {
+    handleError(error)
+  }
+}
 
 const Home = async ({ searchParams }: SearchParams) => {
+
+  const users = await test();
+  console.log(users)
+
   const { query = "", filter = "" } = await searchParams;
-  // const result = await test();
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title

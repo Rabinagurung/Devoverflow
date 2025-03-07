@@ -20,7 +20,7 @@ export function formUrlQuery({ params, key, value }: FormUrlQueryProps) {
       url: window.location.pathname,
       query: queryString,
     },
-    { skipNull: true }
+    { skipNull: true },
   );
 }
 
@@ -36,7 +36,7 @@ export function deleteUrlQuery({ params, keysToRemove }: DeleteUrlQueryProps) {
       url: window.location.pathname,
       query: queryString,
     },
-    { skipNull: true }
+    { skipNull: true },
   );
 }
 

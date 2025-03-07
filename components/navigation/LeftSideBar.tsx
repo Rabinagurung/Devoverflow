@@ -1,19 +1,21 @@
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
-import NavLinks from "./navbar/NavLinks";
+
+import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
-import Link from "next/link";
-import Image from "next/image";
-import { auth, signOut } from "@/auth";
+
+import NavLinks from "./navbar/NavLinks";
 
 const LeftSideBar = async () => {
   const session = await auth();
 
   return (
     <section
-      className="custom-scrollbar flex flex-col sticky left-0 top-0 justify-between h-screen gap-6 pt-36 p-6 
-    overflow-y-auto background-light900_dark200 border-r light-border lg:w-[266px] 
-    shadow-light-200 dark:shadow-none dark:backdrop-blur-[150px] max-sm:hidden "
+      className="custom-scrollbar background-light900_dark200 light-border sticky left-0 top-0 flex h-screen flex-col justify-between gap-6 
+    overflow-y-auto border-r p-6 pt-36 shadow-light-200 
+    dark:shadow-none dark:backdrop-blur-[150px] max-sm:hidden lg:w-[266px] "
     >
       <div className="flex flex-1 flex-col gap-6">
         <NavLinks isMobileNav={false} />
@@ -27,13 +29,13 @@ const LeftSideBar = async () => {
               await signOut({ redirectTo: "/" });
             }}
           >
-            <Button className="w-full min-h-[42px] px-4 py-3 border light-border-2 body-semibold rounded-lg shadow-none text-dark400_light900 btn-tertiary">
+            <Button className="light-border-2 body-semibold text-dark400_light900 btn-tertiary min-h-[42px] w-full rounded-lg border px-4 py-3 shadow-none">
               <Image
                 src="/icons/sign-up.svg"
                 height={20}
                 width={20}
                 alt="Account image"
-                className="max-md:hidden invert-colors"
+                className="invert-colors max-md:hidden"
               />
               <span className="max-lg:hidden">Log Out</span>
             </Button>
@@ -41,7 +43,7 @@ const LeftSideBar = async () => {
         ) : (
           <>
             <Button
-              className="w-full px-4 py-3 rounded-lg shadow-none body-semibold min-h-[42px] btn-secondary"
+              className="body-semibold btn-secondary min-h-[42px] w-full rounded-lg px-4 py-3 shadow-none"
               asChild
             >
               <Link href={ROUTES.SIGN_IN}>
@@ -50,7 +52,7 @@ const LeftSideBar = async () => {
                   height={20}
                   width={20}
                   alt="Account image"
-                  className="lg:hidden invert-colors"
+                  className="invert-colors lg:hidden"
                 />
                 <span className="primary-text-gradient max-lg:hidden">
                   Login
@@ -59,8 +61,8 @@ const LeftSideBar = async () => {
             </Button>
 
             <Button
-              className="w-full min-h-[42px] px-4 py-3 border light-border-2 body-semibold 
-            rounded-lg shadow-none text-dark400_light900 btn-tertiary"
+              className="light-border-2 body-semibold text-dark400_light900 btn-tertiary min-h-[42px] w-full rounded-lg 
+            border px-4 py-3 shadow-none"
               asChild
             >
               <Link href={ROUTES.SIGN_UP}>
@@ -70,7 +72,7 @@ const LeftSideBar = async () => {
                   height={20}
                   width={20}
                   alt="Account image"
-                  className="lg:hidden invert-colors"
+                  className="invert-colors lg:hidden"
                 />
               </Link>
             </Button>

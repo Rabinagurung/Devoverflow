@@ -1,4 +1,4 @@
-import { Document, model, models, ObjectId, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
 export interface IUser {
   name: string;
@@ -24,7 +24,7 @@ const UserSchema = new Schema<IUser>(
     portfolio: { type: String },
     reputaiton: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = models?.User || model<IUser>("User", UserSchema);

@@ -16,7 +16,7 @@ const VoteSchema = new Schema<IVote>(
     actionType: { type: String, enum: ["question", "answer"], required: true },
     voteType: { type: String, enum: ["upvote", "downvote"], required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Vote = models?.Vote || model<IVote>("Vote", VoteSchema);

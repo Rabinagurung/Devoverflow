@@ -1,8 +1,9 @@
+import Image from "next/image";
+import React, { ReactNode } from "react";
+
 import SocialAuthForm from "@/components/forms/SocialAuthForm";
 import Navbar from "@/components/navigation/navbar";
 
-import Image from "next/image";
-import React, { ReactNode } from "react";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (

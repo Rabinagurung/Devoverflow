@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 import Account from "@/database/account.model";
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
@@ -5,10 +7,7 @@ import { ForbiddenError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { AccountSchema } from "@/lib/validations";
 
-import { ApiErrorResponse } from "@/types/gloabl";
-import { NextResponse } from "next/server";
-
-export async function GET(_: Request) {
+export async function GET(_req: Request) {
   try {
     await dbConnect();
 
@@ -16,7 +15,7 @@ export async function GET(_: Request) {
 
     return NextResponse.json(
       { success: true, data: accounts },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;
@@ -38,7 +37,7 @@ export async function POST(request: Request) {
 
     if (existingAccount) {
       return new ForbiddenError(
-        "An account with same provider already exists."
+        "An account with same provider already exists.",
       );
     }
 
@@ -46,7 +45,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { success: true, data: newAccount },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;

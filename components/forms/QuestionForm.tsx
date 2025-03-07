@@ -47,7 +47,7 @@ const QuestionForm = () => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    field: { value: string[] }
+    field: { value: string[] },
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();

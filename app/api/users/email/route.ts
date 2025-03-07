@@ -1,16 +1,19 @@
+
+import { NextResponse } from "next/server";
+
 import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
-import { ApiErrorResponse } from "@/types/gloabl";
-import { error } from "console";
-import { NextResponse } from "next/server";
+
 
 //  Get users details by email
 export async function POST(request: Request) {
   const { email } = await request.json();
+
   try {
+    await dbConnect()
     const validatedData = UserSchema.partial().safeParse({ email });
 
     if (!validatedData.success) {

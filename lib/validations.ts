@@ -1,5 +1,5 @@
-import { M_PLUS_1 } from "next/font/google";
-import { Schema, z } from "zod";
+
+import { z } from "zod";
 
 export const signInSchema = z.object({
   email: z
@@ -64,7 +64,7 @@ export const AskAQuestionSchema = z.object({
       z
         .string()
         .min(1, { message: "Tag is required. " })
-        .max(50, { message: "Tag name cannot exceed 50 characters." })
+        .max(50, { message: "Tag name cannot exceed 50 characters." }),
     )
     .min(1, { message: "Tag is required" })
     .max(3, { message: "Cannot exceed more then 3 tags" }),
