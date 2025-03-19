@@ -4,7 +4,6 @@ import React, { ReactNode } from "react";
 import SocialAuthForm from "@/components/forms/SocialAuthForm";
 import Navbar from "@/components/navigation/navbar";
 
-
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>

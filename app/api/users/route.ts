@@ -6,7 +6,6 @@ import { ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
 
-
 export async function GET() {
   try {
     await dbConnect();
@@ -51,6 +50,4 @@ export async function POST(request: Request) {
   } catch (error) {
     return handleError(error, "api") as ApiErrorResponse;
   }
-
 }
-

@@ -2,7 +2,6 @@ import { RequestError } from "../http-error";
 import handleError from "./error";
 import logger from "../logger";
 
-
 interface FetchOptions extends RequestInit {
   timeOut?: number;
 }
@@ -15,7 +14,6 @@ export async function fetchHandler<T>(
   url: string,
   options: FetchOptions = {},
 ): Promise<ActionResponse<T>> {
-
   const {
     timeOut = 5000,
     headers: customHeaders = {},
@@ -50,13 +48,14 @@ export async function fetchHandler<T>(
   } catch (err) {
     const error = isError(err) ? err : new Error("Unknown error occcured");
 
-   if(error.name === "AbortError") {
-      logger.warn(`Request to ${url} timed out `)
-   } else {
-    logger.error(`Error fetching ${url}: ${error.message} `)
-   }
+    if (error.name === "AbortError") {
+      logger.warn(`Request to ${url} timed out `);
+    } else {
+      logger.error(`Error fetching ${url}: ${error.message} `);
+    }
 
     return handleError(error) as ActionResponse<T>;
-
   }
 }
+
+// client side

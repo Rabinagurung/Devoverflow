@@ -7,9 +7,6 @@ import { NotFoundError, ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { AccountSchema } from "@/lib/validations";
 
-
-
-
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },

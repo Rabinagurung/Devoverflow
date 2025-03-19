@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   DefaultValues,
   FieldValues,
@@ -11,18 +12,24 @@ import {
 import { z, ZodType } from "zod";
 
 import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
 
 import { Button } from "../ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
-
-
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
-  formType: "SIGN_IN" | "SIGN_UP";
   defaultValues: T;
-  onSubmit: (data: T) => Promise<{ success: boolean; data: T }>;
+  formType: "SIGN_IN" | "SIGN_UP";
+  onSubmit: (data: T) => Promise<ActionResponse>;
 }
 
 const buttonTextMap = {
@@ -34,8 +41,9 @@ const AuthForm = <T extends FieldValues>({
   schema,
   formType,
   defaultValues,
-  
+  onSubmit,
 }: AuthFormProps<T>) => {
+  const router = useRouter();
   // Initialize RHF and prepare to track fields dynamically
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -46,8 +54,25 @@ const AuthForm = <T extends FieldValues>({
     ? buttonTextMap[formType].loading
     : buttonTextMap[formType].default;
 
-  const handleSubmit: SubmitHandler<T> = async () => {
-    //  TODO
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const result = (await onSubmit(data)) as ActionResponse;
+
+    if (result?.success) {
+      toast({
+        title: "Success",
+        description:
+          formType === "SIGN_IN"
+            ? "Signed in successfully"
+            : "Signed up successfully",
+      });
+      router.push(ROUTES.HOME);
+    } else {
+      toast({
+        title: `Error ${result?.status}`,
+        description: result?.error?.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -76,6 +101,7 @@ const AuthForm = <T extends FieldValues>({
                     className="paragraph-regular light-border-2 text-dark300_light700 no-focus background-light900_dark300 min-h-12 rounded-1.5 border px-4 py-6"
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           ></FormField>
@@ -96,7 +122,7 @@ const AuthForm = <T extends FieldValues>({
 
         {formType === "SIGN_IN" ? (
           <p className="text-dark400_light700 text-center font-inter">
-            Do not have an account?{" "}
+            Do not have an account ?{" "}
             <Link
               href={ROUTES.SIGN_UP}
               className="paragraph-semibold primary-text-gradient font-inter font-semibold "
@@ -106,7 +132,7 @@ const AuthForm = <T extends FieldValues>({
           </p>
         ) : (
           <p className="text-dark400_light700 text-center font-inter">
-            Already have an account?{" "}
+            Already have an account ?{" "}
             <Link
               href={ROUTES.SIGN_IN}
               className="paragraph-semibold primary-text-gradient font-inter font-semibold "
@@ -160,15 +186,14 @@ Because while intializing useForm() of React hook form, we pass the defaultValue
 */
 
 /* 3. 
-In React Hook Form, several type utilities are provided to help you manage form types and ensure type safety. These utilities are particularly useful when you're working with TypeScript to type your form data, default values, and validation rules. Here's a list of the most important ones:
+In React Hook Form, several type utilities are provided to manage form types and ensure type safety. 
+These utilities are useful when working with TypeScript to type form data, default values, and validation rules.
+Here's a list of the most important ones:
 
 1. FieldValues
 Represents a generic shape of form values.
 It’s the base type for form data.
-Usage:
-typescript
-Copy
-Edit
+
 import { FieldValues } from "react-hook-form";
 
 type MyFormValues = FieldValues;  // Equivalent to Record<string, any>
@@ -176,10 +201,7 @@ type MyFormValues = FieldValues;  // Equivalent to Record<string, any>
 
 2. DefaultValues<T>
 Ensures that your defaultValues match the shape and type of the form data (T).
-Usage:
-typescript
-Copy
-Edit
+
 import { DefaultValues, useForm } from "react-hook-form";
 
 type SignUpForm = {
@@ -202,10 +224,7 @@ const form = useForm<SignUpForm>({
 3. FieldPath<T>
 Returns a union of all valid keys from a form data type (T).
 Useful for ensuring that dynamic field names are type-safe.
-Usage:
-typescript
-Copy
-Edit
+
 import { FieldPath } from "react-hook-form";
 
 type SignUpForm = {
@@ -217,13 +236,11 @@ type SignUpForm = {
 type UsernamePath = FieldPath<SignUpForm>;  // "username" | "email" | "password"
 
 const field: UsernamePath = "username";  // ✅ Valid
-const field2: UsernamePath = "age";      // ❌ Error: "age" is not a valid field
+const field2: UsernamePath = "age";     // ❌ Error: "age" is not a valid field
+
 4. FieldPathValue<T, P>
 Retrieves the type of a specific field (P) in the form data type (T).
-Usage:
-typescript
-Copy
-Edit
+
 import { FieldPathValue } from "react-hook-form";
 
 type SignUpForm = {
@@ -232,13 +249,11 @@ type SignUpForm = {
   password: string;
 };
 
-type EmailType = FieldPathValue<SignUpForm, "email">;  // string
+type EmailType = FieldPathValue<SignUpForm, "email">;  
+
 5. FieldArrayPath<T>
 Returns a union of keys that represent array fields in your form data.
-Usage:
-typescript
-Copy
-Edit
+
 import { FieldArrayPath } from "react-hook-form";
 
 type FormWithArrays = {
@@ -247,12 +262,11 @@ type FormWithArrays = {
 };
 
 type ArrayPath = FieldArrayPath<FormWithArrays>;  // "users" | "tags"
+
+
 6. FieldArrayPathValue<T, P>
 Returns the type of elements in an array field for the specified path.
-Usage:
-typescript
-Copy
-Edit
+
 import { FieldArrayPathValue } from "react-hook-form";
 
 type FormWithArrays = {
@@ -261,13 +275,11 @@ type FormWithArrays = {
 };
 
 type UserType = FieldArrayPathValue<FormWithArrays, "users">;  // { name: string; age: number }
+
 7. UseFormReturn<T>
 Represents the return type of useForm when called with a specific form data type (T).
 This type contains all the methods and properties returned by useForm.
-Usage:
-typescript
-Copy
-Edit
+
 import { UseFormReturn, useForm } from "react-hook-form";
 
 type SignUpForm = {
@@ -277,12 +289,10 @@ type SignUpForm = {
 };
 
 const form: UseFormReturn<SignUpForm> = useForm<SignUpForm>();
+
 8. UseFieldArrayReturn<T>
 Represents the return type of useFieldArray, helping manage array fields in your form.
-Usage:
-typescript
-Copy
-Edit
+
 import { UseFieldArrayReturn } from "react-hook-form";
 
 type FormWithArrays = {
@@ -292,12 +302,10 @@ type FormWithArrays = {
 const fieldArray: UseFieldArrayReturn<FormWithArrays, "users"> = useFieldArray({
   name: "users",
 });
+
 9. Path<T> (Alias for FieldPath<T>)
 Returns a type-safe string representing a valid path in T. Commonly used for form fields.
-Usage:
-typescript
-Copy
-Edit
+
 import { Path } from "react-hook-form";
 
 type SignUpForm = {
@@ -308,12 +316,10 @@ type SignUpForm = {
 };
 
 type ProfilePath = Path<SignUpForm>;  // "username" | "profile" | "profile.age"
+
 10. DeepPartial<T>
 Represents a partial version of a form data type, where all fields are optional (including nested fields).
-Usage:
-typescript
-Copy
-Edit
+
 import { DeepPartial } from "react-hook-form";
 
 type SignUpForm = {
@@ -345,10 +351,10 @@ FieldArrayPath<T>	Union of keys that are arrays in T
 FieldArrayPathValue<T, P>	Type of elements in an array field
 UseFormReturn<T>	Represents the return type of useForm
 DeepPartial<T>	Makes all fields in T optional (including nested fields)
+
 Why Use These Utilities?
 Type-Safe Forms: Avoid runtime errors by ensuring your form fields and data structures match.
 Better Developer Experience: Autocomplete and type-checking help prevent mistakes.
 Dynamic Field Handling: Utilities like FieldPath make working with dynamic fields easier.
 
-
-Let me know if you want examples focusing on specific utilities, like useForm or useFieldArray, with Zod! 😊 */
+ */

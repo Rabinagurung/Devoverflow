@@ -6,7 +6,6 @@ import { NotFoundError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
 
-
 // Get users by id. /api/users/[id]
 export async function GET(
   _: Request,

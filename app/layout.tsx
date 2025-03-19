@@ -1,5 +1,3 @@
-
-
 import type { Metadata } from "next";
 import { Space_Grotesk as SpaceGrotesk, Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
@@ -9,7 +7,6 @@ import React from "react";
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from "@/context/Theme";
-
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,7 +34,7 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const session = await auth();
+  const session = null; // await auth();
 
   return (
     <html lang="en" suppressHydrationWarning>

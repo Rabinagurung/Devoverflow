@@ -1,4 +1,3 @@
-
 import pino from "pino";
 
 const isEdge = process.env.NEXT_RUNTIME === "edge";

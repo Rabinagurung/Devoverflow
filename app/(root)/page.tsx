@@ -1,14 +1,13 @@
 import Link from "next/link";
 
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
-import { api } from "@/lib/handlers/api";
-import handleError from "@/lib/handlers/error";
-
-
+// import { api } from "@/lib/handlers/api";
+// import handleError from "@/lib/handlers/error";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -55,18 +54,19 @@ const questions = [
   },
 ];
 
-const test = async () => {
-  try {
-    return await api.users.getByEmail("rachana@gmail.com")
-  } catch (error) {
-    handleError(error)
-  }
-}
+// const test = async () => {
+//   try {
+//     return await api.users.getByEmail("rachana@gmail.com")
+//   } catch (error) {
+
+//     handleError(error)
+//   }
+// }
 
 const Home = async ({ searchParams }: SearchParams) => {
+  const session = await auth();
 
-  const users = await test();
-  console.log(users)
+  console.log("Sesssion from page", session);
 
   const { query = "", filter = "" } = await searchParams;
 

@@ -7,8 +7,6 @@ import { getTimeStamp } from "@/lib/utils";
 import TagCard from "./TagCard";
 import Metric from "../Metric";
 
-
-
 interface QuestionCardProps {
   question: Question;
 }

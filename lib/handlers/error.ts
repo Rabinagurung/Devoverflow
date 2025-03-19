@@ -20,8 +20,6 @@ const formatResponse = (
     },
   };
 
-  console.log("ResponseContent", responseContent);
-
   return responseType === "api"
     ? NextResponse.json(responseContent, { status })
     : {

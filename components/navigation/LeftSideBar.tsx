@@ -9,7 +9,7 @@ import ROUTES from "@/constants/routes";
 import NavLinks from "./navbar/NavLinks";
 
 const LeftSideBar = async () => {
-  const session = await auth();
+  const session = null; // await auth();
 
   return (
     <section

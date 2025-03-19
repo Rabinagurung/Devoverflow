@@ -1,7 +1,6 @@
-
 import { z } from "zod";
 
-export const signInSchema = z.object({
+export const SignInSchema = z.object({
   email: z
     .string()
     .min(1, { message: "Email is required." })
@@ -13,7 +12,7 @@ export const signInSchema = z.object({
     .max(100, { message: "Password cannot exceed 100 characters." }),
 });
 
-export const signUpSchema = z.object({
+export const SignUpSchema = z.object({
   username: z
     .string()
     .min(3, { message: "Username must be at least 3 characters." })
@@ -129,4 +128,22 @@ export const AccountSchema = z.object({
   providerAccountId: z
     .string()
     .min(1, { message: "Provider Account Id is required" }),
+});
+
+export const SignInWithAuthSchema = z.object({
+  provider: z.string().min(1, { message: "Provider is required." }),
+  providerAccountId: z
+    .string()
+    .min(1, { message: "ProvideAccountId is required." }),
+  user: z.object({
+    name: z.string().min(1, { message: "Name is required." }),
+    username: z
+      .string()
+      .min(3, { message: "User name must be at least 3 characters long." }),
+    email: z
+      .string()
+      .min(1, { message: "Email is required." })
+      .email({ message: "Please provide a valid email address." }),
+    image: z.string().url({ message: "Please provide a valid URL" }).optional(),
+  }),
 });
