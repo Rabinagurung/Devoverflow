@@ -34,7 +34,7 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const session = null; // await auth();
+  const session = await auth();
 
   return (
     <html lang="en" suppressHydrationWarning>

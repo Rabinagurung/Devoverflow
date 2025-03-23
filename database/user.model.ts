@@ -24,7 +24,11 @@ const UserSchema = new Schema<IUser>(
     portfolio: { type: String },
     reputaiton: { type: Number, default: 0 },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 
 const User = models?.User || model<IUser>("User", UserSchema);

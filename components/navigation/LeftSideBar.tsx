@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +10,9 @@ import ROUTES from "@/constants/routes";
 import NavLinks from "./navbar/NavLinks";
 
 const LeftSideBar = async () => {
-  const session = null; // await auth();
+  const session = await auth();
+
+  const userId = session?.user?.id;
 
   return (
     <section
@@ -18,10 +21,10 @@ const LeftSideBar = async () => {
     dark:shadow-none dark:backdrop-blur-[150px] max-sm:hidden lg:w-[266px] "
     >
       <div className="flex flex-1 flex-col gap-6">
-        <NavLinks isMobileNav={false} />
+        <NavLinks userId={userId} />
       </div>
       <div className="flex flex-col gap-3">
-        {session?.user ? (
+        {userId ? (
           <form
             action={async () => {
               "use server";
@@ -29,15 +32,14 @@ const LeftSideBar = async () => {
               await signOut({ redirectTo: "/" });
             }}
           >
-            <Button className="light-border-2 body-semibold text-dark400_light900 btn-tertiary min-h-[42px] w-full rounded-lg border px-4 py-3 shadow-none">
-              <Image
-                src="/icons/sign-up.svg"
-                height={20}
-                width={20}
-                alt="Account image"
-                className="invert-colors max-md:hidden"
-              />
-              <span className="max-lg:hidden">Log Out</span>
+            <Button
+              type="submit"
+              className="base-medium w-fit !bg-transparent px-4 py-3"
+            >
+              <LogOut className="size-5 text-black dark:text-white" />
+              <span className="text-dark300_light900 max-lg:hidden">
+                Log Out
+              </span>
             </Button>
           </form>
         ) : (

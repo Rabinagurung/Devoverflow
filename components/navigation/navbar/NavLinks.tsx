@@ -9,9 +9,14 @@ import { SheetClose } from "@/components/ui/sheet";
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 
-const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
+const NavLinks = ({
+  isMobileNav = false,
+  userId,
+}: {
+  isMobileNav?: boolean;
+  userId?: string;
+}) => {
   const pathName = usePathname();
-  const userId = 1;
 
   return (
     <>
@@ -20,7 +25,6 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
           (pathName.includes(item.route) && item.route.length > 1) ||
           pathName === item.route;
 
-        // item.route === "/profile" ? item.route ==="" :
         if (item.route === "/profile") {
           if (userId) item.route = `${item.route}/${userId}`;
           else return null;
