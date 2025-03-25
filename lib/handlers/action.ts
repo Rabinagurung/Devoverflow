@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 
 import { UnauthorizedError, ValidationError } from "../http-error";
 import dbConnect from "../mongoose";
+import console from "console";
 
 type ActionOptions<T> = {
   params?: T;
@@ -19,16 +20,17 @@ async function action<T>({
   schema,
   authorize = false,
 }: ActionOptions<T>) {
+
   if (params && schema) {
     try {
       schema.parse(params);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ValidationError(
+        return new ValidationError(
           error.flatten().fieldErrors as Record<string, string[]>,
         );
       } else {
-        throw new Error("Schema validation failed");
+        return new Error("Schema validation failed");
       }
     }
   }

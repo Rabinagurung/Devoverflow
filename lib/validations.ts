@@ -53,8 +53,8 @@ export const SignUpSchema = z.object({
 export const AskAQuestionSchema = z.object({
   title: z
     .string()
-    .min(1, { message: "Title is required." })
-    .max(50, { message: "Title cannot exceed 50 characters." }),
+    .min(5, { message: "Title is required." })
+    .max(100, { message: "Title cannot exceed 100 characters." }),
 
   content: z.string().min(1, { message: "Content is required" }),
 
@@ -63,7 +63,7 @@ export const AskAQuestionSchema = z.object({
       z
         .string()
         .min(1, { message: "Tag is required. " })
-        .max(50, { message: "Tag name cannot exceed 50 characters." }),
+        .max(30, { message: "Tag cannot exceed 30 characters." }),
     )
     .min(1, { message: "Tag is required" })
     .max(3, { message: "Cannot exceed more then 3 tags" }),

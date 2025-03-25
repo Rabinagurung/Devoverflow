@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
-import React, { useRef } from "react";
+import React, { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,6 +21,11 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import createQuestion from "@/lib/actions/question.action";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/constants/routes";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const Editor = dynamic(() => import("../Editor"), {
   // Make sure we turn SSR off
@@ -28,6 +33,9 @@ const Editor = dynamic(() => import("../Editor"), {
 });
 
 const QuestionForm = () => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   const editorRef = useRef<MDXEditorMethods>(null);
 
   const form = useForm<z.infer<typeof AskAQuestionSchema>>({
@@ -72,8 +80,27 @@ const QuestionForm = () => {
     }
   };
 
-  const handleCreateQuestion = (data: z.infer<typeof AskAQuestionSchema>) => {
-    console.log(data);
+  const handleCreateQuestion = async (
+    data: z.infer<typeof AskAQuestionSchema>,
+  ) => {
+    startTransition(async () => {
+      const result = await createQuestion(data);
+
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: "Question created successfully.",
+        });
+
+        if (result.data) router.push(ROUTES.QUESTIONS(result.data._id));
+      } else {
+        toast({
+          title: `Error: ${result.status}`,
+          description: `${result.error?.message}` || "Something went wrong",
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   return (
@@ -172,7 +199,14 @@ const QuestionForm = () => {
             type="submit"
             className="primary-gradient paragraph-semibold w-fit rounded-2 px-4 py-3 !text-light-900"
           >
-            Ask a Question
+            {isPending ? (
+              <>
+                <ReloadIcon className="mr-2 size-4 animate-spin" />
+                <span>Submitting</span>
+              </>
+            ) : (
+              <>Ask a Question</>
+            )}
           </Button>
         </div>
       </form>
