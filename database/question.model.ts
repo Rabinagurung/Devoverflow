@@ -1,5 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
-import { number } from "zod";
+import { Document, model, models, Schema, Types } from "mongoose";
 
 export interface IQuestion {
   title: string;
@@ -12,7 +11,7 @@ export interface IQuestion {
   downVotes: number;
 }
 
-export interface IQuestionDoc extends IQuestion, Document {}
+export interface IQuestionDoc extends IQuestion, Document {};
 
 const QuestionSchema = new Schema<IQuestion>(
   {
@@ -25,7 +24,8 @@ const QuestionSchema = new Schema<IQuestion>(
     upvotes: { type: Number, default: 0 },
     downVotes: { type: Number, default: 0 },
   },
-  { timestamps: true },
+  { timestamps: true, toJSON: { virtuals: true },
+  toObject: { virtuals: true },},
 );
 
 const Question =

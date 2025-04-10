@@ -20,7 +20,6 @@ async function action<T>({
   schema,
   authorize = false,
 }: ActionOptions<T>) {
-
   if (params && schema) {
     try {
       schema.parse(params);

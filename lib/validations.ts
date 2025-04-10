@@ -147,3 +147,11 @@ export const SignInWithAuthSchema = z.object({
     image: z.string().url({ message: "Please provide a valid URL" }).optional(),
   }),
 });
+
+export const EditQuestionSchema = AskAQuestionSchema.extend({
+  questionId: z.string().min(1, { message: "Question Id is required." }),
+});
+
+export const GetQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question Id is required." }),
+});

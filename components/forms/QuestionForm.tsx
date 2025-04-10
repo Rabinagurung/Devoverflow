@@ -21,18 +21,24 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import createQuestion from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/constants/routes";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import router from "next/router";
 
 const Editor = dynamic(() => import("../Editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
 
-const QuestionForm = () => {
+interface QuestionEditParams {
+  question?: Question;
+  isEdit?: boolean;
+}
+
+const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -40,7 +46,7 @@ const QuestionForm = () => {
 
   const form = useForm<z.infer<typeof AskAQuestionSchema>>({
     resolver: zodResolver(AskAQuestionSchema),
-    defaultValues: { title: "", content: "", tags: [] },
+    defaultValues: { title: question?.title || "", content: question?.content ||  "", tags: question?.tags.map((t) => t.name) || [] },
   });
 
   const handleRemoveTag = (tag: string, field: { value: string[] }) => {
@@ -84,6 +90,34 @@ const QuestionForm = () => {
     data: z.infer<typeof AskAQuestionSchema>,
   ) => {
     startTransition(async () => {
+      console.log({isEdit, question})
+      if (isEdit && question) {
+        const result = await editQuestion({
+          questionId: question?._id,
+          ...data,
+        });
+
+        console.log("Result", { result });
+
+        if (result.success) {
+          toast({
+            title: "Success",
+            description: "Question edited successfully.",
+          });
+
+          if (result.data) router.push(ROUTES.QUESTIONS(result.data?._id as string));
+        
+        } else {
+          toast({
+            title: `Error: ${result.status}`,
+            description: result.error?.message || "Something went wrong",
+            variant: "destructive",
+          });
+        }
+
+        return;
+      }
+
       const result = await createQuestion(data);
 
       if (result.success) {
@@ -205,7 +239,7 @@ const QuestionForm = () => {
                 <span>Submitting</span>
               </>
             ) : (
-              <>Ask a Question</>
+              <>{isEdit ? "Edit": "Ask a Question"}</>
             )}
           </Button>
         </div>

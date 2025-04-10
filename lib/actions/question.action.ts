@@ -1,28 +1,36 @@
 "use server";
 
-import Question from "@/database/question.model";
+import Question, { IQuestion, IQuestionDoc } from "@/database/question.model";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { AskAQuestionSchema } from "../validations";
+import {
+  AskAQuestionSchema,
+  EditQuestionSchema,
+  GetQuestionSchema,
+} from "../validations";
 import mongoose from "mongoose";
-import Tag from "@/database/tag.mode";
+import Tag, { ITagDoc } from "@/database/tag.model";
 import TagQuestion from "@/database/tag-question.model";
 
-async function createQuestion(
+import { NotFoundError, UnauthorizedError } from "../http-error";
+
+export async function createQuestion(
   params: CreateQuestionParams,
 ): Promise<ActionResponse<Question>> {
-  const validatesResult = await action({
+  const validationResult = await action({
     params,
     schema: AskAQuestionSchema,
     authorize: true,
   });
 
-  if (validatesResult instanceof Error)
-    return handleError(validatesResult) as ErrorResponse;
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
 
-  const { title, content, tags } = validatesResult.params!;
+  const { title, content, tags } = validationResult.params!;
 
-  const userId = validatesResult.session?.user?.id;
+  console.log(tags);
+
+  const userId = validationResult.session?.user?.id;
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -45,11 +53,13 @@ async function createQuestion(
         { upsert: true, new: true, session },
       );
 
-      tagsIds.push(existingTag._id);
-      tagQuestionsDocs.push({
-        tag: existingTag._id,
-        question: question._id,
-      });
+      if (existingTag) {
+        tagsIds.push(existingTag._id);
+        tagQuestionsDocs.push({
+          tag: existingTag._id,
+          question: question._id,
+        });
+      }
     }
 
     await TagQuestion.insertMany(tagQuestionsDocs, { session });
@@ -57,12 +67,14 @@ async function createQuestion(
     await Question.findByIdAndUpdate(
       question._id,
       {
-        $push: { tag: { $$each: tagsIds } },
+        $push: { tags: { $each: tagsIds } },
       },
       { session },
     );
 
     await session.commitTransaction();
+
+    console.log("Create quesiton: ",{question})
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
@@ -70,8 +82,150 @@ async function createQuestion(
 
     return handleError(error) as ErrorResponse;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
 
-export default createQuestion;
+export async function editQuestion(
+  params: EditQuestionParams,
+): Promise<ActionResponse<IQuestionDoc>> {
+  const validationResult = await action({
+    params,
+    schema: EditQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { questionId, title, content, tags } = validationResult.params!;
+
+  const userId = validationResult.session?.user?.id;
+
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+
+  try {
+    const question = await Question.findById(questionId).populate("tags");
+
+    console.log(question);
+
+    if (!question) throw new NotFoundError("Question");
+
+    if (question.author.toString() !== userId) throw new UnauthorizedError();
+
+    if (question.title !== title || question.content !== content) {
+      question.title = title;
+      question.content = content;
+
+      await question.save({ session });
+    }
+
+    const newTagQuestionDocs = [];
+
+    const tagsToAdd = tags.filter(
+      (tag) =>
+        !question.tags.some((t: ITagDoc) =>
+          t.name.toLowerCase().includes(tag.toLowerCase()),
+        ),
+    );
+
+    //const tagsToAdd2 = tags.filter((tag) => question.tags.every((t: ITagDoc) => t.name.toLowerCase().includes(tag.toLowerCase())))
+
+    const tagsToRemove = question.tags.filter((tag: ITagDoc) =>
+      tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()),
+    );
+
+    console.log(tagsToRemove);
+
+    //const tagsToRemove2 = question.tags.filter((tag: ITagDoc) => tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()));
+
+    if (tagsToAdd.length > 0) {
+      for (const tag of tagsToAdd) {
+        const existingTag = await Tag.findOneAndUpdate(
+          { name: { $regex: `^${tag}$`, $options: "i" } },
+          {
+            $setOnInsert: { name: tag },
+            $inc: { question: 1 },
+          },
+          { upsert: true, new: true, session },
+        );
+
+        if (existingTag) {
+          newTagQuestionDocs.push({
+            tag: existingTag._id,
+            question: questionId,
+          });
+          question.tags.push(existingTag._id);
+        }
+      }
+    }
+
+    if (tagsToRemove.length > 0) {
+      const tagIdsToRemove = tagsToRemove.map((tag: ITagDoc) => tag._id);
+
+      await Tag.updateMany(
+        { _id: { $in: tagIdsToRemove } },
+        { $inc: { questions: -1 } },
+        { session },
+      );
+
+      await TagQuestion.deleteMany(
+        { tag: { $in: tagIdsToRemove }, question: questionId },
+        { session },
+      );
+
+      question.tags = question.tags.filter((tag: mongoose.Types.ObjectId) =>
+        tagIdsToRemove.every(
+          (id: mongoose.Types.ObjectId) => !id.equals(tag._id),
+        ),
+      );
+    }
+
+    if (newTagQuestionDocs.length > 0) {
+      await TagQuestion.insertMany(newTagQuestionDocs, { session });
+    }
+
+    await question.save({ session });
+    await session.commitTransaction();
+
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    await session.abortTransaction();
+    return handleError(error) as ErrorResponse;
+  } finally {
+    await session.endSession();
+  }
+}
+
+export async function getQuestion(
+  params: GetQuestionParams,
+): Promise<ActionResponse<Question>> {
+  const validationResult = await action({
+    params,
+    schema: GetQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { questionId } = validationResult.params!;
+
+  console.log({questionId});
+
+  try {
+    const question = await Question.findById(questionId) .populate("tags")
+    .populate("author", "_id name image");
+
+    console.log({question})
+
+    if (!question) throw new Error("Question Not Found");
+
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    console.log({error})
+    return handleError(error) as ErrorResponse;
+  }
+}
