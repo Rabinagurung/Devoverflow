@@ -46,7 +46,11 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
 
   const form = useForm<z.infer<typeof AskAQuestionSchema>>({
     resolver: zodResolver(AskAQuestionSchema),
-    defaultValues: { title: question?.title || "", content: question?.content ||  "", tags: question?.tags.map((t) => t.name) || [] },
+    defaultValues: {
+      title: question?.title || "",
+      content: question?.content || "",
+      tags: question?.tags.map((t) => t.name) || [],
+    },
   });
 
   const handleRemoveTag = (tag: string, field: { value: string[] }) => {
@@ -90,7 +94,7 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
     data: z.infer<typeof AskAQuestionSchema>,
   ) => {
     startTransition(async () => {
-      console.log({isEdit, question})
+      console.log({ isEdit, question });
       if (isEdit && question) {
         const result = await editQuestion({
           questionId: question?._id,
@@ -105,8 +109,8 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
             description: "Question edited successfully.",
           });
 
-          if (result.data) router.push(ROUTES.QUESTIONS(result.data?._id as string));
-        
+          if (result.data)
+            router.push(ROUTES.QUESTIONS(result.data?._id as string));
         } else {
           toast({
             title: `Error: ${result.status}`,
@@ -239,7 +243,7 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
                 <span>Submitting</span>
               </>
             ) : (
-              <>{isEdit ? "Edit": "Ask a Question"}</>
+              <>{isEdit ? "Edit" : "Ask a Question"}</>
             )}
           </Button>
         </div>

@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 
 import { UnauthorizedError, ValidationError } from "../http-error";
 import dbConnect from "../mongoose";
-import console from "console";
+
 
 type ActionOptions<T> = {
   params?: T;

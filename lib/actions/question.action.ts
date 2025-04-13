@@ -1,18 +1,20 @@
 "use server";
 
-import Question, { IQuestion, IQuestionDoc } from "@/database/question.model";
+import Question, {  IQuestionDoc } from "@/database/question.model";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import {
   AskAQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
+  PaginatedSearchParamsSchema,
 } from "../validations";
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import Tag, { ITagDoc } from "@/database/tag.model";
 import TagQuestion from "@/database/tag-question.model";
 
 import { NotFoundError, UnauthorizedError } from "../http-error";
+
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -74,7 +76,7 @@ export async function createQuestion(
 
     await session.commitTransaction();
 
-    console.log("Create quesiton: ",{question})
+    console.log("Create quesiton: ", { question });
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
@@ -213,19 +215,99 @@ export async function getQuestion(
 
   const { questionId } = validationResult.params!;
 
-  console.log({questionId});
+  console.log({ questionId });
 
   try {
-    const question = await Question.findById(questionId) .populate("tags")
-    .populate("author", "_id name image");
+    const question = await Question.findById(questionId)
+      .populate("tags")
+      .populate("author", "_id name image");
 
-    console.log({question})
+    console.log({ question });
 
     if (!question) throw new Error("Question Not Found");
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
-    console.log({error})
+    console.log({ error });
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getQuestions(
+  params: PaginatedSearchParams,
+): Promise<ActionResponse<{ questions: Question[]; isNext: boolean }>> {
+  const valdiatedResult = await action({
+    params,
+    schema: PaginatedSearchParamsSchema,
+  });
+
+  if (valdiatedResult instanceof Error)
+    return handleError(valdiatedResult) as ErrorResponse;
+
+  const { page = 1, pageSize = 10, query, sort, filter } = params;
+
+  const skip = (Number(page) - 1) * pageSize;
+
+  const filterQuery: FilterQuery<typeof Question> = {};
+
+  if (filter === "recommended")
+    return { success: true, data: { questions: [], isNext: false } };
+
+  if (query) {
+    filterQuery.$or = [
+      { title: { $regex: `^${query}$`, options: "i" } },
+      { content: { $regex: `^${query}$`, options: "i" } },
+    ];
+
+    console.log("1: ", { filterQuery });
+  }
+
+  let sortCriteria = {};
+
+  switch (filter) {
+    case "newest":
+      sortCriteria = { createdAt: -1 };
+      break;
+
+    case "unanswered":
+      filterQuery.answers = 0;
+      console.log("2", { filterQuery });
+      sortCriteria = { createdAt: -1 };
+      break;
+
+    case "popular":
+      sortCriteria = { upvotes: -1 };
+      break;
+
+    default:
+      sortCriteria = { createdAt: -1 };
+      break;
+  }
+
+  console.log({ sortCriteria });
+
+  try {
+    const totalQuestions = await Question.countDocuments(filterQuery);
+    console.log({ totalQuestions });
+    const questions = await Question.find(filterQuery)
+      .populate("tags", "name")
+      .populate("author", "name image")
+      .lean()
+      .skip(skip)
+      .sort(sortCriteria)
+      .limit(Number(pageSize));
+
+    console.log({ questions });
+
+    const isNext = totalQuestions > skip + questions.length;
+
+    console.log({ isNext });
+
+    return {
+      success: true,
+      data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
+    };
+  } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 }
