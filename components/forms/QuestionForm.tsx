@@ -157,7 +157,6 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
               </FormLabel>
               <FormControl>
                 <Input
-                  type="text"
                   {...field}
                   className="paragraph-regular no-focus light-border-2 background-light800_dark300 text-dark300_light700 h-[53px] rounded-1.5 border px-6 py-4"
                 />

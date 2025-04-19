@@ -8,7 +8,6 @@ import { auth } from "@/auth";
 import { UnauthorizedError, ValidationError } from "../http-error";
 import dbConnect from "../mongoose";
 
-
 type ActionOptions<T> = {
   params?: T;
   schema?: ZodSchema<T>;

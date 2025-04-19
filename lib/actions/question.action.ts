@@ -1,6 +1,6 @@
 "use server";
 
-import Question, {  IQuestionDoc } from "@/database/question.model";
+import Question, { IQuestionDoc } from "@/database/question.model";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import {
@@ -14,7 +14,6 @@ import Tag, { ITagDoc } from "@/database/tag.model";
 import TagQuestion from "@/database/tag-question.model";
 
 import { NotFoundError, UnauthorizedError } from "../http-error";
-
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -255,8 +254,8 @@ export async function getQuestions(
 
   if (query) {
     filterQuery.$or = [
-      { title: { $regex: `^${query}$`, options: "i" } },
-      { content: { $regex: `^${query}$`, options: "i" } },
+      { title: { $regex: `^${query}$`, $options: "i" } },
+      { content: { $regex: `^${query}$`, $options: "i" } },
     ];
 
     console.log("1: ", { filterQuery });
@@ -287,6 +286,9 @@ export async function getQuestions(
   console.log({ sortCriteria });
 
   try {
+
+
+    // throw new Error("Checking error")
     const totalQuestions = await Question.countDocuments(filterQuery);
     console.log({ totalQuestions });
     const questions = await Question.find(filterQuery)
@@ -307,6 +309,7 @@ export async function getQuestions(
       success: true,
       data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
     };
+
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

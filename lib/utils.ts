@@ -18,7 +18,6 @@ export function getDevIconClassName(techName: string) {
 }
 
 export function getTimeStamp(createdAt: Date) {
-
   const date = new Date(createdAt);
   const now = new Date();
 

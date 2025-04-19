@@ -7,6 +7,8 @@ import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 import { getQuestions } from "@/lib/actions/question.action";
+import DataRenderer from "@/components/DataRenderer";
+import { EMPTY_QUESTIONS } from "@/constants/states";
 
 const Home = async ({ searchParams }: RouteParams) => {
   const session = await auth();
@@ -22,7 +24,9 @@ const Home = async ({ searchParams }: RouteParams) => {
     filter: filter || "",
   });
 
-  const {questions} = data || {};
+  console.log(error);
+
+  const { questions } = data || {};
 
   return (
     <>
@@ -45,25 +49,24 @@ const Home = async ({ searchParams }: RouteParams) => {
         />
       </section>
       <HomeFilter />
+      <DataRenderer
+        success={success}
+        data={questions}
+        empty={EMPTY_QUESTIONS}
+        error={error}
+        render={(dataQuestions) =>
+          dataQuestions.map((q) => (
+            <div
+              className="mt-10 flex w-full flex-col gap-6"
+              key={q._id}
+            >
+              <QuestionCard question={q} />
+            </div>
+          ))
+        }
+      />
 
-      {success ? (
-        <div className="mt-10 flex w-full flex-col gap-6">
-          {questions && questions.length > 0 ? 
-
-            (questions.map((question) => <QuestionCard key={question._id}  question={question}/> ))
-
-          : 
-          <div className="mt-10 flex w-full items-center justify-center">
-            <p className="text-dark400_light700">No questions found</p>
-          </div>
-         
-          }
-        </div>
-      ) : (
-        <div className="mt-10 flex w-full items-center justify-center">
-          <p className="text-dark400_light700">{error?.message || "Failed to fetch questions"}</p>
-        </div>
-      )}
+     
     </>
   );
 };

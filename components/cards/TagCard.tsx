@@ -71,7 +71,7 @@ const TagCard = ({
     } else {
       return (
         <Link
-          href={ROUTES.TAGS(id)}
+          href={ROUTES.TAG(id)}
           className="flex items-center justify-between"
         >
           {tagContent}
