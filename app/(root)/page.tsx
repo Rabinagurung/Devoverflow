@@ -56,17 +56,12 @@ const Home = async ({ searchParams }: RouteParams) => {
         error={error}
         render={(dataQuestions) =>
           dataQuestions.map((q) => (
-            <div
-              className="mt-10 flex w-full flex-col gap-6"
-              key={q._id}
-            >
+            <div className="mt-10 flex w-full flex-col gap-6" key={q._id}>
               <QuestionCard question={q} />
             </div>
           ))
         }
       />
-
-     
     </>
   );
 };

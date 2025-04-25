@@ -232,6 +232,7 @@ export async function getQuestion(
   }
 }
 
+
 export async function getQuestions(
   params: PaginatedSearchParams,
 ): Promise<ActionResponse<{ questions: Question[]; isNext: boolean }>> {
@@ -286,8 +287,6 @@ export async function getQuestions(
   console.log({ sortCriteria });
 
   try {
-
-
     // throw new Error("Checking error")
     const totalQuestions = await Question.countDocuments(filterQuery);
     console.log({ totalQuestions });
@@ -309,7 +308,6 @@ export async function getQuestions(
       success: true,
       data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
     };
-
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
