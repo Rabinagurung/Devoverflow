@@ -55,8 +55,6 @@ const LocalSearchBar = ({
     return () => clearTimeout(delayDeboundFun);
   }, [router, searchQuery, route, searchParams, pathName]);
 
-
-
   return (
     <div
       className={`flex-center background-light800_darkgradient h-[56px] w-full gap-4 rounded-[10px] border border-light-700 p-4 

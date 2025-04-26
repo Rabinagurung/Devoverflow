@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 declare global {
+  import { NextResponse } from "next/server";
+
   interface Tag {
     _id: string;
     name: string;

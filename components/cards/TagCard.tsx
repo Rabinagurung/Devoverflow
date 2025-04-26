@@ -28,8 +28,7 @@ const TagCard = ({
   remove,
   compact,
 }: TagCardProps) => {
-
-  console.log({name})
+  console.log({ name });
   const iconClass = getDevIconClassName(name);
   const iconDescription = getTechDescription(name);
 
@@ -100,7 +99,7 @@ const TagCard = ({
         </div>
 
         <p className="small-regular text-dark500_light700 mt-5  w-full line-clamp-3">
-         {iconDescription}
+          {iconDescription}
         </p>
 
         <p className="text-dark400_light500 small-medium mt-3.5">
