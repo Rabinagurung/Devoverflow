@@ -1,9 +1,10 @@
+import React from "react";
+
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getTagQuestion } from "@/lib/actions/tag.action";
-import React from "react";
 
 const TagDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
@@ -16,7 +17,7 @@ const TagDetails = async ({ params, searchParams }: RouteParams) => {
     query,
   });
 
-  const { tag, questions, isNext } = data || {};
+  const { questions } = data || {};
 
   return (
     <>

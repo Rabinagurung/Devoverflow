@@ -1,19 +1,20 @@
 "use server";
 
+import mongoose, { FilterQuery } from "mongoose";
+
 import Question, { IQuestionDoc } from "@/database/question.model";
+import TagQuestion from "@/database/tag-question.model";
+import Tag, { ITagDoc } from "@/database/tag.model";
+
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import { NotFoundError, UnauthorizedError } from "../http-error";
 import {
   AskAQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
-import mongoose, { FilterQuery } from "mongoose";
-import Tag, { ITagDoc } from "@/database/tag.model";
-import TagQuestion from "@/database/tag-question.model";
-
-import { NotFoundError, UnauthorizedError } from "../http-error";
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -214,20 +215,15 @@ export async function getQuestion(
 
   const { questionId } = validationResult.params!;
 
-  console.log({ questionId });
-
   try {
     const question = await Question.findById(questionId)
       .populate("tags")
       .populate("author", "_id name image");
 
-    console.log({ question });
-
     if (!question) throw new Error("Question Not Found");
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
-    console.log({ error });
     return handleError(error) as ErrorResponse;
   }
 }
@@ -243,7 +239,7 @@ export async function getQuestions(
   if (valdiatedResult instanceof Error)
     return handleError(valdiatedResult) as ErrorResponse;
 
-  const { page = 1, pageSize = 10, query, sort, filter } = params;
+  const { page = 1, pageSize = 10, query, filter } = params;
 
   const skip = (Number(page) - 1) * pageSize;
 
@@ -257,8 +253,6 @@ export async function getQuestions(
       { title: { $regex: `^${query}$`, $options: "i" } },
       { content: { $regex: `^${query}$`, $options: "i" } },
     ];
-
-    console.log("1: ", { filterQuery });
   }
 
   let sortCriteria = {};
@@ -282,8 +276,6 @@ export async function getQuestions(
       sortCriteria = { createdAt: -1 };
       break;
   }
-
-  console.log({ sortCriteria });
 
   try {
     // throw new Error("Checking error")

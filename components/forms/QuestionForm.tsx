@@ -2,11 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import React, { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { AskAQuestionSchema } from "@/lib/validations";
 
 import TagCard from "../cards/TagCard";
@@ -21,12 +26,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { createQuestion, editQuestion } from "@/lib/actions/question.action";
-import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import ROUTES from "@/constants/routes";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import router from "next/router";
 
 const Editor = dynamic(() => import("../Editor"), {
   // Make sure we turn SSR off
@@ -212,7 +211,7 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
                     {field?.value?.map((tag: string) => (
                       <TagCard
                         key={tag}
-                        id={tag}
+                        _id={tag}
                         name={tag}
                         isButton
                         onDelete={() => handleRemoveTag(tag, field)}

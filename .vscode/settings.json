@@ -1,5 +1,5 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -15,53 +15,37 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+
+  "files.associations": {
+    "*.tsx": "typescriptreact"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    // "**/.vscode": true,
+    "**/.next": true,
+    "**/node_modules": true,
+    "next-env.d.ts": true
+  },
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "cpp": true,
+    "javascript": false,
+    "html": true,
+    "dockerfile": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  }
 }
-
-// {
-//   "editor.defaultFormatter": "esbenp.prettier-vscode",
-//   "editor.formatOnSave": true,
-//   "editor.codeActionsOnSave": {
-//     "source.fixAll.eslint": "explicit",
-//     "source.addMissingImports": "explicit"
-//   },
-//   "prettier.tabWidth": 2,
-//   "prettier.useTabs": false,
-//   "prettier.semi": true,
-//   "prettier.singleQuote": false,
-//   "prettier.jsxSingleQuote": false,
-//   "prettier.trailingComma": "es5",
-//   "prettier.arrowParens": "always",
-//   "[json]": {
-//     "editor.defaultFormatter": "esbenp.prettier-vscode"
-//   },
-//   "[typescript]": {
-//     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-//   },
-//   "[typescriptreact]": {
-//     "editor.defaultFormatter": "esbenp.prettier-vscode"
-//   },
-//   "[javascriptreact]": {
-//     "editor.defaultFormatter": "esbenp.prettier-vscode"
-//   },
-//   "typescript.tsdk": "node_modules/typescript/lib",
-//   "files.exclude": {
-//     // "**/.git": true,
-//     "**/.vscode": false,
-//     "**/.next": false,
-//     "**/node_modules": true,
-//     "next-env.d.ts": true
-//   },
-//   "notebook.defaultFormatter": "esbenp.prettier-vscode",
-//   "notebook.formatOnSave.enabled": false,
-//   "eslint.format.enable": true
-// }

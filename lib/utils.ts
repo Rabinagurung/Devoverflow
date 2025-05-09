@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // This file containes helper to manage different class names based on condition without using template strings ``.
-
+// The regex /[\s.]/g matches any whitespace character (\s) or a literal dot (.)
 export function getDevIconClassName(techName: string) {
   const normalizedTechName = techName.replace(/[\s.]/g, "").toLowerCase();
 
@@ -76,5 +76,15 @@ export function getTimeStamp(createdAt: Date) {
     if (interval >= 1) {
       return `${interval} ${unit.label}${interval > 1 ? "s" : ""} ago`;
     }
+  }
+}
+
+export function getFormattedNumber(upvotes: number) {
+  if (upvotes >= 1000000) {
+    return `${(upvotes / 1000000).toFixed(1)}M`;
+  } else if (upvotes >= 1000) {
+    return `${(upvotes / 1000).toFixed(1)}k`;
+  } else {
+    return upvotes.toString();
   }
 }

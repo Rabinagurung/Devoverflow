@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React, { MouseEvent } from "react";
@@ -28,7 +30,6 @@ const TagCard = ({
   remove,
   compact,
 }: TagCardProps) => {
-  console.log({ name });
   const iconClass = getDevIconClassName(name);
   const iconDescription = getTechDescription(name);
 
@@ -85,20 +86,20 @@ const TagCard = ({
   return (
     <Link href={ROUTES.TAG(_id)} className="shadow-light100_darknone">
       <article
-        className="flex flex-col w-full py-10 px-[30px] border rounded-lg light-border 
-      background-light900_dark200 sm:w-[260px]"
+        className="light-border background-light900_dark200 flex w-full flex-col rounded-lg border px-[30px] 
+      py-10 sm:w-[260px]"
       >
         <div className="flex items-center justify-between gap-3">
           <div
-            className="py-1.5 px-5 border-1 rounded-sm border-light-800 dark:border-none 
-        background-light800_dark400 w-fit"
+            className="border-1 background-light800_dark400 w-fit rounded-sm border-light-800 px-5 
+        py-1.5 dark:border-none"
           >
             <p className="text-dark300_light900 paragraph-semibold">{name}</p>
           </div>
           <i className={cn(iconClass, "text-2xl")} aria-hidden="true" />
         </div>
 
-        <p className="small-regular text-dark500_light700 mt-5  w-full line-clamp-3">
+        <p className="small-regular text-dark500_light700 mt-5  line-clamp-3 w-full">
           {iconDescription}
         </p>
 

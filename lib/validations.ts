@@ -54,7 +54,7 @@ export const AskAQuestionSchema = z.object({
   title: z
     .string()
     .min(5, { message: "Title is required." })
-    .max(100, { message: "Title cannot exceed 100 characters." }),
+    .max(300, { message: "Title cannot exceed 100 characters." }),
 
   content: z.string().min(1, { message: "Content is required" }),
 

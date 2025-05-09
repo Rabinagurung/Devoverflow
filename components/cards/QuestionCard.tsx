@@ -19,7 +19,7 @@ const QuestionCard = ({
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
-            {getTimeStamp(createdAt)}
+            {getTimeStamp(new Date(createdAt))}
           </span>
           <Link href={ROUTES.QUESTIONS(_id)}>
             <h3 className="base-semibold sm:h3-semibold text-dark200_light900 line-clamp-1 flex-1">
@@ -31,7 +31,12 @@ const QuestionCard = ({
 
       <div className="mt-3.5 flex w-full flex-wrap gap-2">
         {tags.map((tag: Tag) => (
-          <TagCard key={tag._id} id={tag._id} name={tag.name} compact />
+          <TagCard
+            key={tag._id}
+            _id={tag._id as string}
+            name={tag.name}
+            compact
+          />
         ))}
       </div>
 
@@ -43,6 +48,7 @@ const QuestionCard = ({
           href={ROUTES.PROFILE(author._id)}
           textStyles="body-medium text-dark400_light700"
           title={`• asked ${getTimeStamp(createdAt)}`}
+          titleStyles="max-sm:hidden"
           isAuthor
         />
         <div className="flex-center gap-3 max-sm:flex-wrap max-sm:justify-start">

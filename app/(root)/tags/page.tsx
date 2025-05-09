@@ -1,10 +1,11 @@
+import React from "react";
+
 import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/DataRenderer";
 import LocalSearchBar from "@/components/search/LocalSearcBar";
 import ROUTES from "@/constants/routes";
 import { EMPTY_TAGS } from "@/constants/states";
 import { getTags } from "@/lib/actions/tag.action";
-import React from "react";
 
 const Tags = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;
@@ -16,7 +17,7 @@ const Tags = async ({ searchParams }: RouteParams) => {
     filter,
   });
 
-  const { tags, isNext } = data || {};
+  const { tags } = data || {};
 
   return (
     <>

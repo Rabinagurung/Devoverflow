@@ -1,17 +1,19 @@
 "use server";
 
+import { error } from "console";
+
+import { FilterQuery } from "mongoose";
+
+import { Question, Tag } from "@/database";
+import { ErrorResponse } from "@/types/globales";
+
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import dbConnect from "../mongoose";
 import {
   GetTagQuestionSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
-import { FilterQuery } from "mongoose";
-
-import dbConnect from "../mongoose";
-import { Question, Tag } from "@/database";
-import { error } from "console";
-import { ErrorResponse } from "@/types/globales";
 
 export async function getTags(
   params: PaginatedSearchParams,
@@ -100,7 +102,7 @@ export async function getTagQuestion(
   if (validationResult instanceof Error)
     return handleError(error) as ErrorResponse;
 
-  const { tagId, page = 1, pageSize = 10, query } = validationResult?.params!;
+  const { tagId, page = 1, pageSize = 10, query } = validationResult.params!;
 
   const skip = (Number(page) - 1) * Number(pageSize);
 
@@ -111,7 +113,7 @@ export async function getTagQuestion(
 
     if (!tag) throw new Error("Tag not found");
 
-    let filterQuery: FilterQuery<typeof Question> = {
+    const filterQuery: FilterQuery<typeof Question> = {
       tags: { $in: [tagId] },
     };
 

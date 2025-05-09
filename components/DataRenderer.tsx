@@ -1,8 +1,10 @@
 import Image from "next/image";
-import React from "react";
-import { Button } from "./ui/button";
 import Link from "next/link";
+import React from "react";
+
 import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/constants/states";
+
+import { Button } from "./ui/button";
 
 interface DataRendererProps<T> {
   success: boolean;
@@ -45,7 +47,7 @@ const StateSkeleton = ({
   button,
 }: StateSkeletonProps) => {
   return (
-    <div className="mt-16 flex w-full flex-col justify-center items-center  sm:mt-36 ">
+    <div className="mt-16 flex w-full flex-col items-center justify-center  sm:mt-36 ">
       <>
         <Image
           src={image.light}
