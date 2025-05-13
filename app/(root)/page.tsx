@@ -2,18 +2,16 @@ import Link from "next/link";
 
 import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
+import DataRenderer from "@/components/DataRenderer";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
-import { getQuestions } from "@/lib/actions/question.action";
-import DataRenderer from "@/components/DataRenderer";
 import { EMPTY_QUESTIONS } from "@/constants/states";
+import { getQuestions } from "@/lib/actions/question.action";
 
 const Home = async ({ searchParams }: RouteParams) => {
-  const session = await auth();
-
-  console.log("Sesssion from page", session);
+  // const session = await auth();
 
   const { page, pageSize, query = "", filter = "" } = await searchParams;
 
@@ -23,8 +21,6 @@ const Home = async ({ searchParams }: RouteParams) => {
     query: query || "",
     filter: filter || "",
   });
-
-  console.log(error);
 
   const { questions } = data || {};
 
