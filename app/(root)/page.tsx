@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import HomeFilter from "@/components/filter/HomeFilter";
