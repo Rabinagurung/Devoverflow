@@ -30,6 +30,7 @@ export default {
           "900": "#FFFFFF",
         },
       },
+
       screens: {
         xs: "420px",
       },
