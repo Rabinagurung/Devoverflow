@@ -9,17 +9,14 @@ import { getQuestion } from "@/lib/actions/question.action";
 const EditQuestion = async ({ params }: RouteParams) => {
   const { id } = await params;
 
-  console.log({ id });
   if (!id) return notFound();
 
   const session = await auth();
   if (!session) return redirect(ROUTES.SIGN_IN);
 
   const { success, data: question } = await getQuestion({ questionId: id });
-  console.log({ success, question });
 
   if (!success) return notFound();
-  console.log({ question });
 
   if (question?.author._id.toString() !== session?.user?.id)
     return redirect(ROUTES.QUESTIONS(id));

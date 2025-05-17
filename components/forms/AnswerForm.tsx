@@ -5,10 +5,12 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { toast } from "@/hooks/use-toast";
+import { createAnswer } from "@/lib/actions/answer.action";
 import { AnswerSchema } from "@/lib/validations";
 
 import { Button } from "../ui/button";
@@ -25,8 +27,10 @@ const Editor = dynamic(() => import("@/components/Editor"), {
   ssr: false,
 });
 
-const AnswerForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const AnswerForm = ({ questionId }: { questionId: string }) => {
+  console.log({ questionId });
+  const [isAnswering, startAnsweringTransition] = useTransition();
+
   const [isAISubmitting, setIsAISubmitting] = useState(false);
 
   const editorRef = useRef<MDXEditorMethods>(null);
@@ -39,7 +43,29 @@ const AnswerForm = () => {
   });
 
   async function onSubmitHandler(values: z.infer<typeof AnswerSchema>) {
-    console.log(values);
+    startAnsweringTransition(async () => {
+      const { success, data, error } = await createAnswer({
+        questionId,
+        content: values.content,
+      });
+
+      if (success) {
+        form.reset();
+
+        editorRef.current?.setMarkdown("");
+
+        toast({
+          title: "Success",
+          description: "Your answer has been posted successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+    });
   }
 
   return (
@@ -83,7 +109,7 @@ const AnswerForm = () => {
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl>
                   <Editor
-                    editorRef={editorRef}
+                    ref={editorRef}
                     value={field.value}
                     fieldChange={field.onChange}
                   />
@@ -99,7 +125,7 @@ const AnswerForm = () => {
               className="primary-gradient px-3 py-4  w-fit
                rounded-2 paragraph-semibold text-light-900 dark:text-light-900"
             >
-              {isSubmitting ? (
+              {isAnswering ? (
                 <>
                   <ReloadIcon className="mr-2 size-4 animate-spin" />
                   Posting...

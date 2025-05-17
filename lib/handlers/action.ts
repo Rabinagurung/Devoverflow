@@ -28,6 +28,7 @@ async function action<T>({
           error.flatten().fieldErrors as Record<string, string[]>,
         );
       } else {
+        console.log({ error });
         return new Error("Schema validation failed");
       }
     }

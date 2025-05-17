@@ -33,8 +33,6 @@ export async function createQuestion(
 
   const { title, content, tags } = validationResult.params!;
 
-  console.log(tags);
-
   const userId = validationResult.session?.user?.id;
 
   const session = await mongoose.startSession();
@@ -79,8 +77,6 @@ export async function createQuestion(
 
     await session.commitTransaction();
 
-    console.log("Create quesiton: ", { question });
-
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
@@ -114,8 +110,6 @@ export async function editQuestion(
   try {
     const question = await Question.findById(questionId).populate("tags");
 
-    console.log(question);
-
     if (!question) throw new NotFoundError("Question");
 
     if (question.author.toString() !== userId) throw new UnauthorizedError();
@@ -141,8 +135,6 @@ export async function editQuestion(
     const tagsToRemove = question.tags.filter((tag: ITagDoc) =>
       tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()),
     );
-
-    console.log(tagsToRemove);
 
     //const tagsToRemove2 = question.tags.filter((tag: ITagDoc) => tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()));
 
@@ -267,7 +259,6 @@ export async function getQuestions(
 
     case "unanswered":
       filterQuery.answers = 0;
-      console.log("2", { filterQuery });
       sortCriteria = { createdAt: -1 };
       break;
 
@@ -283,7 +274,7 @@ export async function getQuestions(
   try {
     // throw new Error("Checking error")
     const totalQuestions = await Question.countDocuments(filterQuery);
-    console.log({ totalQuestions });
+
     const questions = await Question.find(filterQuery)
       .populate("tags", "name")
       .populate("author", "name image")
@@ -292,11 +283,7 @@ export async function getQuestions(
       .sort(sortCriteria)
       .limit(Number(pageSize));
 
-    console.log({ questions });
-
     const isNext = totalQuestions > skip + questions.length;
-
-    console.log({ isNext });
 
     return {
       success: true,

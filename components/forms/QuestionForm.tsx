@@ -93,14 +93,11 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
     data: z.infer<typeof AskAQuestionSchema>,
   ) => {
     startTransition(async () => {
-      console.log({ isEdit, question });
       if (isEdit && question) {
         const result = await editQuestion({
           questionId: question?._id,
           ...data,
         });
-
-        console.log("Result", { result });
 
         if (result.success) {
           toast({

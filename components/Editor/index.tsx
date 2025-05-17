@@ -1,4 +1,5 @@
 "use client";
+
 import "@mdxeditor/editor/style.css";
 import {
   headingsPlugin,
@@ -31,17 +32,25 @@ import {
 } from "@mdxeditor/editor";
 import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
-import React from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import type { ForwardedRef } from "react";
 import "./dark-editor.css";
 
 interface Props {
-  editorRef: ForwardedRef<MDXEditorMethods> | null;
+  // editorRef: ForwardedRef<MDXEditorMethods> | null;
   value: string;
   fieldChange: (value: string) => void;
 }
 
-const Editor = ({ editorRef, value, fieldChange, ...props }: Props) => {
+const Editor = forwardRef<MDXEditorMethods, Props>(function Editor(
+  { value, fieldChange, ...props },
+  ref: ForwardedRef<MDXEditorMethods>,
+) {
+  const mdxRef = useRef<MDXEditorMethods>(null);
+
+  // expose mdxRef.current to parent via the forwarded ref
+  useImperativeHandle(ref, () => mdxRef.current!, []);
+
   const { resolvedTheme } = useTheme();
 
   const theme = resolvedTheme === "dark" ? [basicDark] : [];
@@ -50,7 +59,7 @@ const Editor = ({ editorRef, value, fieldChange, ...props }: Props) => {
     <MDXEditor
       key={resolvedTheme}
       markdown={value}
-      ref={editorRef}
+      ref={mdxRef}
       onChange={fieldChange}
       plugins={[
         // Example Plugin Usage
@@ -123,7 +132,7 @@ const Editor = ({ editorRef, value, fieldChange, ...props }: Props) => {
       {...props}
     />
   );
-};
+});
 
 export default Editor;
 
