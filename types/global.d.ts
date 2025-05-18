@@ -25,6 +25,16 @@ declare global {
     createdAt: Date;
   }
 
+  interface Answer {
+    _id: string;
+    author: Author;
+    question: Question;
+    content: string;
+    upvotes: number;
+    downvotes: number;
+    createdAt: Date;
+  }
+
   type ActionResponse<T = null> = {
     success: boolean;
     data?: T;
