@@ -15,8 +15,9 @@ const AllAnswers = ({ success, data, error, totalAnswers }: Props) => {
         <h3 className="primary-text-gradient ">
           {totalAnswers} {totalAnswers > 1 ? "Answers" : "Answer"}
         </h3>
-        <div>Filter</div>
+        <p>Filter</p>
       </div>
+
       <DataRenderer
         success={success}
         data={data}
