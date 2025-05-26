@@ -1,65 +1,58 @@
 "use client";
 
-import "@mdxeditor/editor/style.css";
 import {
+  MDXEditor,
+  UndoRedo,
+  BoldItalicUnderlineToggles,
+  toolbarPlugin,
+  CodeToggle,
+  InsertCodeBlock,
+  codeBlockPlugin,
   headingsPlugin,
   listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  MDXEditor,
-  MDXEditorMethods,
   linkPlugin,
-  imagePlugin,
-  tablePlugin,
-  codeBlockPlugin,
+  quotePlugin,
   markdownShortcutPlugin,
-  sandpackPlugin,
-  codeMirrorPlugin,
-  toolbarPlugin,
-  BoldItalicUnderlineToggles,
-  UndoRedo,
+  ListsToggle,
+  linkDialogPlugin,
   CreateLink,
   InsertImage,
   InsertTable,
-  ListsToggle,
+  tablePlugin,
+  imagePlugin,
+  codeMirrorPlugin,
   ConditionalContents,
   ChangeCodeMirrorLanguage,
-  InsertCodeBlock,
-  linkDialogPlugin,
-  diffSourcePlugin,
-  InsertThematicBreak,
   Separator,
+  InsertThematicBreak,
+  diffSourcePlugin,
+  MDXEditorMethods,
+  sandpackPlugin,
+  thematicBreakPlugin,
 } from "@mdxeditor/editor";
 import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
-import type { ForwardedRef } from "react";
+import { Ref } from "react";
+
+import "@mdxeditor/editor/style.css";
 import "./dark-editor.css";
 
 interface Props {
-  // editorRef: ForwardedRef<MDXEditorMethods> | null;
   value: string;
+  editorRef: Ref<MDXEditorMethods> | null;
   fieldChange: (value: string) => void;
 }
 
-const Editor = forwardRef<MDXEditorMethods, Props>(function Editor(
-  { value, fieldChange, ...props },
-  ref: ForwardedRef<MDXEditorMethods>,
-) {
-  const mdxRef = useRef<MDXEditorMethods>(null);
-
-  // expose mdxRef.current to parent via the forwarded ref
-  useImperativeHandle(ref, () => mdxRef.current!, []);
-
+const Editor = ({ value, editorRef, fieldChange }: Props) => {
   const { resolvedTheme } = useTheme();
 
-  const theme = resolvedTheme === "dark" ? [basicDark] : [];
+  const themeExtension = resolvedTheme === "dark" ? [basicDark] : [];
 
   return (
     <MDXEditor
       key={resolvedTheme}
       markdown={value}
-      ref={mdxRef}
+      ref={editorRef}
       onChange={fieldChange}
       plugins={[
         // Example Plugin Usage
@@ -89,7 +82,7 @@ const Editor = forwardRef<MDXEditorMethods, Props>(function Editor(
             jsx: "JavaScript (React)",
           },
           autoLoadLanguageSupport: true,
-          codeMirrorExtensions: theme,
+          codeMirrorExtensions: themeExtension,
         }),
 
         diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
@@ -109,6 +102,7 @@ const Editor = forwardRef<MDXEditorMethods, Props>(function Editor(
                       <UndoRedo />
                       <Separator />
                       <BoldItalicUnderlineToggles />
+                      <CodeToggle />
                       <Separator />
                       <ListsToggle />
                       <Separator />
@@ -129,13 +123,8 @@ const Editor = forwardRef<MDXEditorMethods, Props>(function Editor(
         markdownShortcutPlugin(),
       ]}
       className=" light-border-2 background-light800_dark300 markdown-editor dark-editor grid  w-full   border"
-      {...props}
     />
   );
-});
+};
 
 export default Editor;
-
-/*
-
-*/

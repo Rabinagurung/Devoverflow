@@ -51,7 +51,7 @@ declare global {
 
   type ApiErrorResponse = NextResponse<ErrorResponse>;
 
-  type ApiResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+  type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
   interface RouteParams {
     params: Promise<Record<string, string>>;

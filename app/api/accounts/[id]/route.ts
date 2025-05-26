@@ -73,7 +73,7 @@ export async function PUT(
     if (!updatedAccount) throw new NotFoundError("Account");
 
     return NextResponse.json(
-      { success: true, date: updatedAccount },
+      { success: true, data: updatedAccount },
       { status: 200 },
     );
   } catch (error) {

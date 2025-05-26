@@ -27,7 +27,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
-const Editor = dynamic(() => import("../Editor"), {
+const Editor = dynamic(() => import("../editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });

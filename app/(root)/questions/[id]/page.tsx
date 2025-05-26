@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import React from "react";
+import React, { Suspense } from "react";
 
 import AllAnswers from "@/components/answer/AllAnswers";
 import TagCard from "@/components/cards/TagCard";
-import Preview from "@/components/Editor/Preview";
+import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
+import Votes from "@/components/votes/Votes";
 import ROUTES from "@/constants/routes";
 import { getAnswers } from "@/lib/actions/answer.action";
 import { getQuestion, incrementViews } from "@/lib/actions/question.action";
+import { hasVoted } from "@/lib/actions/vote.action";
 import { getFormattedNumber, getTimeStamp } from "@/lib/utils";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
@@ -36,13 +38,29 @@ const QuestionDetails = async ({ params }: RouteParams) => {
     filter: "latest",
   });
 
-  const { title, content, createdAt, tags, author, views, answers } = question;
+  const hasVotedPromise = hasVoted({
+    targetId: question._id,
+    targetType: "question",
+  });
+
+  const {
+    _id,
+    title,
+    content,
+    createdAt,
+    tags,
+    author,
+    views,
+    answers,
+    upvotes,
+    downvotes,
+  } = question;
 
   return (
     <>
       <div className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between">
-          <div className="flex items-center justify-start gap-1">
+          <div className="flex items-center justify-start gap-1 ">
             <UserAvatar
               id={author._id}
               name={author.name}
@@ -56,7 +74,17 @@ const QuestionDetails = async ({ params }: RouteParams) => {
               </p>
             </Link>
           </div>
-          <div className="flex items-center justify-end gap-4">Votes</div>
+          <div className="flex justify-end ">
+            <Suspense fallback={<div>Loading votes....</div>}>
+              <Votes
+                targetId={question._id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                targetType="question"
+                hasVotedPromise={hasVotedPromise}
+              />
+            </Suspense>
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">
           {title}
@@ -98,7 +126,6 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           />
         ))}
       </div>
-
       <section className="my-5 ">
         <AllAnswers
           success={areAnswersLoaded}
@@ -107,9 +134,12 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           totalAnswers={answersResult?.totalAnswers || 0}
         />
       </section>
-
       <section className="my-5">
-        <AnswerForm questionId={question._id} />
+        <AnswerForm
+          questionId={_id}
+          questionTitle={title}
+          questionContent={content}
+        />
       </section>
     </>
   );

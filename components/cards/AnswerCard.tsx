@@ -4,15 +4,15 @@ import React from "react";
 import ROUTES from "@/constants/routes";
 import { getTimeStamp } from "@/lib/utils";
 
-import Preview from "../Editor/Preview";
+import Preview from "../editor/Preview";
 import UserAvatar from "../UserAvatar";
 
 const AnswerCard = ({ content, author, createdAt }: Answer) => {
   return (
-    <article className="border-b py-10">
+    <article className="light-border border-b py-10">
       {/* <span id={`answer-${_id}`} className="bg-purple-300 hash-span" /> */}
       <div className="flex flex-col-reverse mb-6 justify-between gap-5 sm:items-center sm:flex-row sm:gap-2">
-        <div className="flex flex-1 items-start  gap-1 sm:items-center ">
+        <div className="flex flex-1 items-start gap-1 sm:items-center ">
           <UserAvatar
             id={author._id}
             name={author.name}

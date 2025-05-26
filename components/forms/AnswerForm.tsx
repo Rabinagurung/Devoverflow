@@ -5,12 +5,14 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
 import { createAnswer } from "@/lib/actions/answer.action";
+import { api } from "@/lib/handlers/api";
 import { AnswerSchema } from "@/lib/validations";
 
 import { Button } from "../ui/button";
@@ -22,16 +24,30 @@ import {
   FormMessage,
 } from "../ui/form";
 
-const Editor = dynamic(() => import("@/components/Editor"), {
+const Editor = dynamic(() => import("@/components/editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
 
-const AnswerForm = ({ questionId }: { questionId: string }) => {
-  console.log({ questionId });
+interface AnswerFormProps {
+  questionId: string;
+  questionTitle: string;
+  questionContent: string;
+}
+
+const AnswerForm = ({
+  questionId,
+  questionTitle,
+  questionContent,
+}: AnswerFormProps) => {
+  console.log({ questionId, questionTitle, questionContent });
+
   const [isAnswering, startAnsweringTransition] = useTransition();
 
   const [isAISubmitting, setIsAISubmitting] = useState(false);
+
+  const session = useSession();
+  console.log({ session });
 
   const editorRef = useRef<MDXEditorMethods>(null);
 
@@ -44,7 +60,7 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
 
   async function onSubmitHandler(values: z.infer<typeof AnswerSchema>) {
     startAnsweringTransition(async () => {
-      const { success, data, error } = await createAnswer({
+      const { success, error } = await createAnswer({
         questionId,
         content: values.content,
       });
@@ -68,6 +84,67 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
     });
   }
 
+  const generateAIAnswer = async () => {
+    if (session.status !== "authenticated") {
+      return toast({
+        title: "Please log in",
+        description: "You need to be logged in to use this feature",
+      });
+    }
+
+    setIsAISubmitting(true);
+
+    const userAnswer = editorRef.current?.getMarkdown();
+
+    try {
+      const { success, data, error } = await api.ai.getAnswer(
+        questionTitle,
+        questionContent,
+        userAnswer,
+      );
+
+      if (!success || !data) {
+        return toast({
+          title: "Error",
+          description: error?.message,
+          variant: "destructive",
+        });
+      }
+
+      console.log({ data });
+      console.log(typeof data);
+
+      // const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+
+      const md = data
+        .replace(/^```[^\n]*\n/, "") // remove the opening ```markdown
+        .replace(/```$/, ""); // remove the very last ```
+
+      if (editorRef.current) {
+        editorRef.current.setMarkdown(md);
+
+        form.setValue("content", md);
+        form.trigger("content");
+      }
+
+      toast({
+        title: "Success",
+        description: "AI generated answer has been generated",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "There was a problem with your request",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAISubmitting(false);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -76,6 +153,7 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
         </h4>
         <Button
           disabled={isAISubmitting}
+          onClick={generateAIAnswer}
           className="btn border rounded-md gap-1.5 light-border-2 px-4 py-2.5 text-primary-500 dark:text-primary-500 small-medium shadow-none"
         >
           {isAISubmitting ? (
@@ -109,8 +187,8 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl>
                   <Editor
-                    ref={editorRef}
                     value={field.value}
+                    editorRef={editorRef}
                     fieldChange={field.onChange}
                   />
                 </FormControl>

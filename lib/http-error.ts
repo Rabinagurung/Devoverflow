@@ -35,7 +35,7 @@ export class ValidationError extends RequestError {
       },
     );
 
-    return formattedErrorMessage.join(" , ");
+    return formattedErrorMessage.join(", ");
   }
 }
 

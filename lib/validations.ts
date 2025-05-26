@@ -173,7 +173,9 @@ export const IncrementViewsSchema = z.object({
 });
 
 export const AnswerSchema = z.object({
-  content: z.string().min(100, { message: "Answer must have 100 characters." }),
+  content: z
+    .string()
+    .min(100, { message: "Answer must have minimum of 100 characters." }),
 });
 
 export const AnswerParamsSchema = AnswerSchema.extend({
@@ -182,4 +184,38 @@ export const AnswerParamsSchema = AnswerSchema.extend({
 
 export const GetAnswersSchema = PaginatedSearchParamsSchema.extend({
   questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const AIAnswersSchema = z.object({
+  question: z
+    .string()
+    .min(5, { message: "Question title must be at least 5 characters." })
+    .max(130, {
+      message: "Question title musn't be longer then 130 characters.",
+    }),
+
+  content: z.string().min(100, {
+    message: "Question description must have minimum of 100 characters.",
+  }),
+
+  userAnswer: z.string().optional(),
+});
+
+export const CreateVoteSchema = z.object({
+  targetId: z.string().min(1, { message: "Target ID is required." }),
+  targetType: z.enum(["question", "answer"], {
+    message: "Invalid target type. Must be 'question' or 'answer'.",
+  }),
+  voteType: z.enum(["upvote", "downvote"], {
+    message: "Invalid vote type. Must be 'upvote' or 'downvote'.",
+  }),
+});
+
+export const UpdateVoteCountSchema = CreateVoteSchema.extend({
+  change: z.number().int().min(-1).max(1),
+});
+
+export const HasVotedSchema = CreateVoteSchema.pick({
+  targetId: true,
+  targetType: true,
 });
