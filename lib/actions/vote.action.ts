@@ -118,12 +118,15 @@ export async function createVote(
 
         //existingVote.voteType = old voteType whose count must be removed from respective Model(Question or Answer)
         //Because users can only vote one downvote or upvote for each question or answer
-        await udpateVoteCount({
-          targetId,
-          targetType,
-          voteType: existingVote.voteType,
-          change: -1,
-        });
+        await udpateVoteCount(
+          {
+            targetId,
+            targetType,
+            voteType: existingVote.voteType,
+            change: -1,
+          },
+          session,
+        );
 
         await udpateVoteCount(
           {

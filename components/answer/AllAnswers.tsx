@@ -13,7 +13,7 @@ const AllAnswers = ({ success, data, error, totalAnswers }: Props) => {
     <div className="mt-11 ">
       <div className="flex justify-between items-center">
         <h3 className="primary-text-gradient ">
-          {totalAnswers} {totalAnswers > 0 ? "Answers" : "Answer"}
+          {totalAnswers} {totalAnswers > 1 ? "Answers" : "Answer"}
         </h3>
         <div>Filter</div>
       </div>
