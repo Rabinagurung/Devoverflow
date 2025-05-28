@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
-import { deleteUrlQuery, formUrlQuery } from "@/lib/url";
+import { removeKeysFromUrlParams, formUrlQuery } from "@/lib/url";
 import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
@@ -28,7 +28,7 @@ const HomeFilter = () => {
     let newUrl = "";
     if (filter === active) {
       setActive("");
-      newUrl = deleteUrlQuery({
+      newUrl = removeKeysFromUrlParams({
         params: filterParmas.toString(),
         keysToRemove: ["filter"],
       });

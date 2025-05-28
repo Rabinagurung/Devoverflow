@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk as SpaceGrotesk, Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
@@ -29,11 +29,8 @@ export const metadata: Metadata = {
     icon: "/images/site-logo.png",
   },
 };
-const RootLayout = async ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
+
+const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
 
   return (

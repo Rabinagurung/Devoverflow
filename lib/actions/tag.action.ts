@@ -5,7 +5,6 @@ import { error } from "console";
 import { FilterQuery } from "mongoose";
 
 import { Question, Tag } from "@/database";
-import { ErrorResponse } from "@/types/globales";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";

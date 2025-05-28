@@ -6,7 +6,7 @@ interface FormUrlQueryProps {
   value: string;
 }
 
-interface DeleteUrlQueryProps {
+interface RemoveKeysFromUrlParams {
   params: string;
   keysToRemove: string[];
 }
@@ -24,7 +24,10 @@ export function formUrlQuery({ params, key, value }: FormUrlQueryProps) {
   );
 }
 
-export function deleteUrlQuery({ params, keysToRemove }: DeleteUrlQueryProps) {
+export function removeKeysFromUrlParams({
+  params,
+  keysToRemove,
+}: RemoveKeysFromUrlParams) {
   const queryString = qs.parse(params);
 
   keysToRemove.forEach((key) => {

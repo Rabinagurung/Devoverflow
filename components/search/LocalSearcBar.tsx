@@ -4,15 +4,15 @@ import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { deleteUrlQuery, formUrlQuery } from "@/lib/url";
+import { formUrlQuery, removeKeysFromUrlParams } from "@/lib/url";
 
 import { Input } from "../ui/input";
 
-interface Props {
+interface LocalSearchBarProps {
   route: string;
   placeholder: string;
   imgSrc: string;
-  setPosition?: "right" | "left";
+  iconPosition?: "right" | "left";
   otherClasses: string;
 }
 
@@ -20,9 +20,9 @@ const LocalSearchBar = ({
   route,
   placeholder,
   imgSrc,
-  setPosition = "left",
+  iconPosition = "left",
   otherClasses,
-}: Props) => {
+}: LocalSearchBarProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
@@ -42,7 +42,7 @@ const LocalSearchBar = ({
         router.push(newURl, { scroll: false });
       } else {
         if (pathName === route) {
-          const newUrl = deleteUrlQuery({
+          const newUrl = removeKeysFromUrlParams({
             params: searchParams.toString(),
             keysToRemove: ["query"],
           });
@@ -57,32 +57,31 @@ const LocalSearchBar = ({
 
   return (
     <div
-      className={`flex-center background-light800_darkgradient h-[56px] w-full gap-4 rounded-[10px] border border-light-700 p-4 
-    dark:border-none ${otherClasses}`}
+      className={`flex-center flex-1 background-light800_darkgradient min-h-[56px] grow gap-4 rounded-[10px] px-4 
+    ${otherClasses}`}
     >
-      {setPosition === "left" && (
+      {iconPosition === "left" && (
         <Image
-          src={imgSrc}
           alt="Search"
+          src={imgSrc}
           height={24}
           width={24}
           className="cursor-pointer"
         />
       )}
-
       <Input
+        type="text"
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="text-light400_light500 no-focus paragraph-regular border-none p-0 shadow-none outline-none"
+        className="text-light400_light500 no-focus paragraph-regular placeholder border-none shadow-none outline-none p-0"
       />
-
-      {setPosition === "right" && (
+      {iconPosition === "right" && (
         <Image
-          src={imgSrc}
           alt="Search"
-          height={24}
-          width={24}
+          src={imgSrc}
+          height={15}
+          width={15}
           className="cursor-pointer"
         />
       )}

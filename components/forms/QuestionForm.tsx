@@ -176,7 +176,7 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
               </FormLabel>
               <FormControl>
                 <Editor
-                  ref={editorRef}
+                  editorRef={editorRef}
                   fieldChange={field.onChange}
                   value={field.value}
                 />

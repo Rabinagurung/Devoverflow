@@ -25,7 +25,6 @@ const Metric = ({
   textStyles,
   imageUrlStyles,
   titleStyles,
-  isAuthor,
 }: MetricProps) => {
   const metricContent = (
     <>

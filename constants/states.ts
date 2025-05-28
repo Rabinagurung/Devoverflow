@@ -52,3 +52,8 @@ export const EMPTY_ANSWERS = {
   title: "No Anwers Found",
   message: "The answers cloud is empty. Rain it with your answers.",
 };
+
+export const EMPTY_USERS = {
+  title: "No Users Found",
+  message: "You are alone here. More users are coming soon",
+};

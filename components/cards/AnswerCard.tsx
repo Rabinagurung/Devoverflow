@@ -22,7 +22,6 @@ const AnswerCard = ({
   return (
     <article className="light-border border-b py-10 ">
       <span id={JSON.stringify(_id)} className="hash-span" />
-
       <div className="flex flex-col-reverse mb-5 justify-between gap-5 sm:items-center sm:flex-row sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center ">
           <UserAvatar
