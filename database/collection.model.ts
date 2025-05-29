@@ -1,4 +1,3 @@
-import { Eclipse, User } from "lucide-react";
 import { Document, model, models, Schema, Types } from "mongoose";
 
 export interface ICollection {

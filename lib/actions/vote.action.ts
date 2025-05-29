@@ -61,7 +61,9 @@ export async function createVote(
     return handleError(validationResult) as ErrorResponse;
 
   const { targetId, targetType, voteType } = validationResult.params!;
+  console.log({ targetId, targetType, voteType });
   const userId = validationResult.session?.user?.id;
+  console.log(userId);
 
   if (!userId) return handleError(new Error("Unauthorized")) as ErrorResponse;
 
@@ -142,7 +144,7 @@ export async function createVote(
 
     await session.commitTransaction();
 
-    revalidatePath(ROUTES.QUESTIONS(targetId));
+    revalidatePath(ROUTES.QUESTION(targetId));
 
     return { success: true };
   } catch (error) {

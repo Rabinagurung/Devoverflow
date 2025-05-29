@@ -7,7 +7,7 @@ const ROUTES = {
   COMMUNITY: "/community",
   TAGS: "/tags",
   JOBS: "/jobs",
-  QUESTIONS: (id: string) => `/questions/${id}`,
+  QUESTION: (id: string) => `/questions/${id}`,
   PROFILE: (_id: string) => `/profile/${_id}`,
   TAG: (id: string) => `/tags/${id}`,
   SIGN_IN_WITH_OAUTH: "/signin-with-oauth",

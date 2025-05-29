@@ -40,14 +40,11 @@ const AnswerForm = ({
   questionTitle,
   questionContent,
 }: AnswerFormProps) => {
-  console.log({ questionId, questionTitle, questionContent });
-
   const [isAnswering, startAnsweringTransition] = useTransition();
 
   const [isAISubmitting, setIsAISubmitting] = useState(false);
 
   const session = useSession();
-  console.log({ session });
 
   const editorRef = useRef<MDXEditorMethods>(null);
 

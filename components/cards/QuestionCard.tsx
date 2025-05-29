@@ -21,7 +21,7 @@ const QuestionCard = ({
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
             {getTimeStamp(new Date(createdAt))}
           </span>
-          <Link href={ROUTES.QUESTIONS(_id)}>
+          <Link href={ROUTES.QUESTION(_id)}>
             <h3 className="base-semibold sm:h3-semibold text-dark200_light900 line-clamp-1 flex-1">
               {title}
             </h3>

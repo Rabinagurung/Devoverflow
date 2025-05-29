@@ -25,9 +25,13 @@ const Votes = ({
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const userId = session.data?.user?.id;
+  console.log({ targetId });
   const { success, data } = use(hasVotedPromise);
 
   const { hasUpvoted, hasDownvoted } = data || {};
+  // const hasUpvoted = true;
+  // const success = true;
+  // const hasDownvoted = false;
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     if (!userId)

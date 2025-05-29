@@ -319,7 +319,7 @@ export async function incrementViews(
 
     await question.save();
 
-    revalidatePath(ROUTES.QUESTIONS(questionId));
+    revalidatePath(ROUTES.QUESTION(questionId));
 
     return { success: true, data: JSON.parse(JSON.stringify(question.views)) };
   } catch (error) {
