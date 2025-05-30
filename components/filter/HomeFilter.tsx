@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
@@ -8,13 +9,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
 const filters = [
-  { name: "React", value: "react" },
-  { name: "JavaScript", value: "javascript" },
-
-  // { name: "Newest", value: "newest" },
-  // { name: "Popular", value: "popular" },
-  // { name: "Unanswered", value: "unanswered" },
-  // { name: "Recommeded", value: "recommended" },
+  { name: "Newest", value: "newest" },
+  { name: "Popular", value: "popular" },
+  { name: "Unanswered", value: "unanswered" },
+  { name: "Recommended", value: "recommended" },
 ];
 
 const HomeFilter = () => {
@@ -45,7 +43,7 @@ const HomeFilter = () => {
   };
 
   return (
-    <div className="mt-10 hidden flex-wrap sm:flex sm:gap-3">
+    <div className="mt-10 hidden flex-wrap sm:flex gap-3">
       {filters.map((filter) => (
         <Button
           key={filter.name}

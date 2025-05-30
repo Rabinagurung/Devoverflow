@@ -2,9 +2,11 @@ import Link from "next/link";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import HomeFilter from "@/components/filter/HomeFilter";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
+import { HomePageFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.action";
@@ -35,12 +37,18 @@ const Home = async ({ searchParams }: RouteParams) => {
         </Button>
       </section>
 
-      <section className="mt-[30px] w-full">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center ">
         <LocalSearcBar
           route="/"
           imgSrc="/icons/search.svg"
           placeholder="Search for Questions Here..."
+          iconPosition="left"
           otherClasses="flex-1"
+        />
+        <CommonFilter
+          filters={HomePageFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+          containerClasses="hidden max-md:flex"
         />
       </section>
       <HomeFilter />

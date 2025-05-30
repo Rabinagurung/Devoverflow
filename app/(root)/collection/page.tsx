@@ -2,7 +2,9 @@ import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import LocalSearchBar from "@/components/search/LocalSearcBar";
+import { CollectionFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getAllSavedQuestions } from "@/lib/actions/collection.action";
@@ -29,7 +31,10 @@ const Collections = async ({ searchParams }: RouteParams) => {
           imgSrc="/icons/search.svg"
           otherClasses="flex-1"
         />
-        <p>Filter</p>
+        <CommonFilter
+          filters={CollectionFilters}
+          otherClasses="min-h-[56px] sm:min-h-[170px]"
+        />
       </div>
       <DataRenderer
         success={success}

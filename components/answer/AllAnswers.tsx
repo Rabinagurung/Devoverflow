@@ -1,9 +1,11 @@
 import React from "react";
 
+import { AnswerFilters } from "@/constants/filters";
 import { EMPTY_ANSWERS } from "@/constants/states";
 
 import AnswerCard from "../cards/AnswerCard";
 import DataRenderer from "../DataRenderer";
+import CommonFilter from "../filter/CommonFilter";
 interface Props extends ActionResponse<Answer[]> {
   totalAnswers: number;
 }
@@ -11,11 +13,14 @@ interface Props extends ActionResponse<Answer[]> {
 const AllAnswers = ({ success, data, error, totalAnswers }: Props) => {
   return (
     <div className="mt-11 ">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <h3 className="primary-text-gradient ">
           {totalAnswers} {totalAnswers > 1 ? "Answers" : "Answer"}
         </h3>
-        <p>Filter</p>
+        <CommonFilter
+          filters={AnswerFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px] "
+        />
       </div>
 
       <DataRenderer

@@ -2,7 +2,9 @@ import React from "react";
 
 import UserCard from "@/components/cards/UserCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
 import LocalSearchBar from "@/components/search/LocalSearcBar";
+import { UserFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { EMPTY_USERS } from "@/constants/states";
 import { getUsers } from "@/lib/actions/user.action";
@@ -29,7 +31,10 @@ const Community = async ({ searchParams }: RouteParams) => {
           placeholder="Search by username or email"
           otherClasses="border light-border-3"
         />
-        <div>Filter</div>
+        <CommonFilter
+          filters={UserFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+        />
       </div>
       <DataRenderer
         data={data?.users}
