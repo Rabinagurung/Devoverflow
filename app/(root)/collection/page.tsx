@@ -3,6 +3,7 @@ import React from "react";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filter/CommonFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearchBar from "@/components/search/LocalSearcBar";
 import { CollectionFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
@@ -19,12 +20,12 @@ const Collections = async ({ searchParams }: RouteParams) => {
     query: query || "",
   });
 
-  const { collection } = data || {};
+  const { collection, isNext } = data || {};
 
   return (
     <>
-      <h1 className="h1-bold"> Saved Questions</h1>
-      <div className="mt-11 flex justify-center max-sm:flex-col sm:items-center gap-5">
+      <h1 className="h1-bold text-dark100_light900"> Saved Questions</h1>
+      <div className="mt-11 flex justify-between max-sm:flex-col sm:items-center gap-5">
         <LocalSearchBar
           route={ROUTES.COLLECTON}
           placeholder="Search questions..."
@@ -33,7 +34,7 @@ const Collections = async ({ searchParams }: RouteParams) => {
         />
         <CommonFilter
           filters={CollectionFilters}
-          otherClasses="min-h-[56px] sm:min-h-[170px]"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
       <DataRenderer
@@ -49,6 +50,7 @@ const Collections = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+      <Pagination page={page} isNext={isNext || false} />
     </>
   );
 };

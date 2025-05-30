@@ -2,7 +2,10 @@ import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filter/CommonFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
+import { TagFilters } from "@/constants/filters";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getTagQuestion } from "@/lib/actions/tag.action";
 
@@ -17,13 +20,13 @@ const TagDetails = async ({ params, searchParams }: RouteParams) => {
     query,
   });
 
-  const { questions } = data || {};
+  const { questions, isNext } = data || {};
 
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Ask Questions</h1>
 
-      <section className="mt-[30px] w-full">
+      <section className="mt-11 w-full">
         <LocalSearcBar
           route="/"
           imgSrc="/icons/search.svg"
@@ -45,6 +48,8 @@ const TagDetails = async ({ params, searchParams }: RouteParams) => {
           ))
         }
       />
+
+      <Pagination page={page} isNext={isNext || false} />
     </>
   );
 };

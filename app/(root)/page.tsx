@@ -4,6 +4,7 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filter/CommonFilter";
 import HomeFilter from "@/components/filter/HomeFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
@@ -18,12 +19,12 @@ const Home = async ({ searchParams }: RouteParams) => {
 
   const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 1,
     query: query || "",
     filter: filter || "",
   });
 
-  const { questions } = data || {};
+  const { questions, isNext } = data || {};
 
   return (
     <>
@@ -65,6 +66,7 @@ const Home = async ({ searchParams }: RouteParams) => {
           ))
         }
       />
+      <Pagination page={page} isNext={isNext || false} />
     </>
   );
 };
