@@ -81,3 +81,27 @@ interface Collection {
   author: string | Author;
   question: Question;
 }
+
+interface GetUserParams {
+  userId: string;
+}
+
+interface GetUserQuestionsParams
+  extends Omit<PaginatedSearchParams, "filter | query | sort"> {
+  userId: string;
+}
+interface DeleteQuestionParams {
+  questionId: string;
+}
+
+interface GetUserAnswersParams extends PaginatedSearchParams {
+  userId: string;
+}
+
+interface DeleteAnswerParams {
+  answerId: string;
+}
+
+interface GetUserTagsParams {
+  userId: string;
+}

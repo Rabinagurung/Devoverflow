@@ -4,6 +4,7 @@ declare global {
   interface Tag {
     _id: string;
     name: string;
+    questions: number;
   }
 
   interface Author {
@@ -45,6 +46,7 @@ declare global {
     location?: string;
     portfolio?: string;
     reputation?: number;
+    createdAt: Date;
   }
 
   type ActionResponse<T = null> = {

@@ -2,10 +2,8 @@ import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
-import CommonFilter from "@/components/filter/CommonFilter";
 import Pagination from "@/components/Pagination";
 import LocalSearcBar from "@/components/search/LocalSearcBar";
-import { TagFilters } from "@/constants/filters";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getTagQuestion } from "@/lib/actions/tag.action";
 

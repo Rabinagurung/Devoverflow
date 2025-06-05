@@ -23,7 +23,7 @@ export async function getTags(
   });
 
   if (validationResult instanceof Error)
-    handleError(validationResult) as ErrorResponse;
+    return handleError(validationResult) as ErrorResponse;
 
   const { page = 1, pageSize = 10, query, filter } = params;
 

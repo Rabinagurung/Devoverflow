@@ -1,15 +1,21 @@
 "use server";
 
+import { error } from "console";
+
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import ROUTES from "@/constants/routes";
-import { Question } from "@/database";
+import { Question, Vote } from "@/database";
 import Answer, { IAnswerDoc } from "@/database/answer.model";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { AnswerParamsSchema, GetAnswersSchema } from "../validations";
+import {
+  AnswerParamsSchema,
+  DeleteAnswerSchema,
+  GetAnswersSchema,
+} from "../validations";
 
 export async function createAnswer(
   params: CreateAnswerParams,
@@ -130,5 +136,62 @@ export async function getAnswers(params: GetAnswersParmas): Promise<
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteAnswer(
+  params: DeleteAnswerParams,
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: DeleteAnswerSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(error) as ErrorResponse;
+
+  const { answerId } = params;
+
+  const userId = validationResult.session?.user?.id;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const answer = await Answer.findById(answerId);
+    if (!answer) throw new Error("Answer Not Found");
+
+    if (answer.author.toString() !== userId) throw new Error("Unauthorized");
+
+    // reduce the question answers count
+
+    await Question.findByIdAndUpdate(
+      answer.question,
+      {
+        $inc: { answers: -1 },
+      },
+      { new: true, session },
+    );
+
+    // delete votes associated with answer
+    await Vote.deleteMany({ actionId: answerId, actionType: "answer" }).session(
+      session,
+    );
+
+    // delete the answer
+    await Answer.findByIdAndDelete(answerId).session(session);
+
+    await session.commitTransaction();
+
+    revalidatePath(`/profile/${userId}`);
+
+    return { success: true };
+  } catch (error) {
+    await session.abortTransaction();
+    return handleError(error) as ErrorResponse;
+  } finally {
+    session.endSession();
   }
 }

@@ -4,15 +4,16 @@ import mongoose, { FilterQuery } from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import ROUTES from "@/constants/routes";
+import { Answer, Collection, Vote } from "@/database";
 import Question, { IQuestionDoc } from "@/database/question.model";
 import TagQuestion from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { NotFoundError, UnauthorizedError } from "../http-error";
 import {
   AskAQuestionSchema,
+  DeleteQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   IncrementViewsSchema,
@@ -109,10 +110,10 @@ export async function editQuestion(
 
   try {
     const question = await Question.findById(questionId).populate("tags");
+    if (!question) throw new Error("Question not found");
 
-    if (!question) throw new NotFoundError("Question");
-
-    if (question.author.toString() !== userId) throw new UnauthorizedError();
+    if (question.author.toString() !== userId)
+      throw new Error("You are not authorized to edit this question");
 
     if (question.title !== title || question.content !== content) {
       question.title = title;
@@ -125,16 +126,20 @@ export async function editQuestion(
 
     const tagsToAdd = tags.filter(
       (tag) =>
-        !question.tags.some((t: ITagDoc) =>
-          t.name.toLowerCase().includes(tag.toLowerCase()),
+        !question.tags.some(
+          (t: ITagDoc) => t.name.toLowerCase() === tag.toLowerCase(),
         ),
     );
 
     //const tagsToAdd2 = tags.filter((tag) => question.tags.every((t: ITagDoc) => t.name.toLowerCase().includes(tag.toLowerCase())))
 
-    const tagsToRemove = question.tags.filter((tag: ITagDoc) =>
-      tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()),
+    console.log(tagsToAdd);
+    const tagsToRemove = question.tags.filter(
+      (tag: ITagDoc) =>
+        !tags.some((t) => t.toLowerCase() === tag.name.toLowerCase()),
     );
+
+    console.log(tagsToRemove);
 
     //const tagsToRemove2 = question.tags.filter((tag: ITagDoc) => tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()));
 
@@ -144,7 +149,7 @@ export async function editQuestion(
           { name: { $regex: `^${tag}$`, $options: "i" } },
           {
             $setOnInsert: { name: tag },
-            $inc: { question: 1 },
+            $inc: { questions: 1 },
           },
           { upsert: true, new: true, session },
         );
@@ -173,10 +178,11 @@ export async function editQuestion(
         { session },
       );
 
-      question.tags = question.tags.filter((tag: mongoose.Types.ObjectId) =>
-        tagIdsToRemove.every(
-          (id: mongoose.Types.ObjectId) => !id.equals(tag._id),
-        ),
+      question.tags = question.tags.filter(
+        (tag: mongoose.Types.ObjectId) =>
+          !tagIdsToRemove.some((id: mongoose.Types.ObjectId) =>
+            id.equals(tag._id),
+          ),
       );
     }
 
@@ -324,5 +330,80 @@ export async function incrementViews(
     return { success: true, data: JSON.parse(JSON.stringify(question.views)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+  const validationResult = await action({
+    params,
+    schema: DeleteQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { questionId } = params;
+  const userId = validationResult.session?.user?.id;
+  console.log(userId);
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const question = await Question.findById(questionId);
+
+    if (!question) throw new Error("Question Not Found");
+
+    console.log(question);
+
+    if (userId !== question.author._id.toString())
+      throw new Error("Unauthorized");
+
+    //Delete realted enrties in Collection and TagQuestion model
+    await Collection.deleteMany({ question: questionId }).session(session);
+    await TagQuestion.deleteMany({ question: questionId }).session(session);
+
+    //Find all tags of Question and reduce their count(question field)
+    if (question.tags.length > 0) {
+      await Tag.updateMany(
+        { _id: { $in: question.tags } },
+        { $inc: { questions: -1 } },
+        { session },
+      );
+    }
+
+    //Remove all the votes of the question
+    await Vote.deleteMany({
+      actionId: questionId,
+      actionType: "question",
+    }).session(session);
+
+    //Remove all the answers of question and their votes of the answers
+    const answers = await Answer.find({ question: questionId }).session(
+      session,
+    );
+
+    if (answers.length > 0) {
+      await Answer.deleteMany({ question: questionId }).session(session);
+
+      await Vote.deleteMany({
+        actionId: { $in: answers.map((answer) => answer.id) },
+        actionType: "answer",
+      }).session(session);
+    }
+
+    await Question.findByIdAndDelete(questionId).session(session);
+
+    await session.commitTransaction();
+
+    revalidatePath(`/profile/${userId}`);
+
+    return { success: true };
+  } catch (error) {
+    await session.abortTransaction();
+    return handleError(error) as ErrorResponse;
+  } finally {
+    session.endSession();
   }
 }

@@ -53,8 +53,8 @@ export const SignUpSchema = z.object({
 export const AskAQuestionSchema = z.object({
   title: z
     .string()
-    .min(5, { message: "Title is required." })
-    .max(300, { message: "Title cannot exceed 100 characters." }),
+    .min(5, { message: "Title must be at least 5 characters." })
+    .max(130, { message: "Title musn't be longer then 130 characters." }),
 
   content: z.string().min(1, { message: "Content is required" }),
 
@@ -63,10 +63,10 @@ export const AskAQuestionSchema = z.object({
       z
         .string()
         .min(1, { message: "Tag is required. " })
-        .max(30, { message: "Tag cannot exceed 30 characters." }),
+        .max(15, { message: "Tag cannot exceed 15 characters." }),
     )
-    .min(1, { message: "Tag is required" })
-    .max(3, { message: "Cannot exceed more then 3 tags" }),
+    .min(1, { message: "Add at least one tag." })
+    .max(3, { message: "Maximum of 3 tags." }),
 });
 
 export const UserSchema = z.object({
@@ -222,4 +222,28 @@ export const HasVotedSchema = CreateVoteSchema.pick({
 
 export const CollectionBaseSchema = z.object({
   questionId: z.string().min(1, { message: "Question Id is required." }),
+});
+
+export const GetUserSchema = z.object({
+  userId: z.string().min(1, { message: "User Id is required." }),
+});
+
+export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, { message: "User Id is required." }),
+});
+
+export const DeleteQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question Id is required." }),
+});
+
+export const GetUserAnswersSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, { message: "User Id is required." }),
+});
+
+export const DeleteAnswerSchema = z.object({
+  answerId: z.string().min(1, { message: "Answer Id is required." }),
+});
+
+export const GetUserTagsSchema = z.object({
+  userId: z.string().min(1, { message: "User Id is required." }),
 });

@@ -32,7 +32,6 @@ const AllAnswers = ({
           otherClasses="min-h-[56px] sm:min-w-[170px] "
         />
       </div>
-
       <DataRenderer
         success={success}
         data={data}
