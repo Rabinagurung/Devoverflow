@@ -15,9 +15,6 @@ export async function POST(req: Request) {
       content,
       userAnswer,
     });
-    // console.log({ validatedResult });
-    // console.log("V Error: ", validatedResult.error);
-    // console.log(validatedResult.error?.flatten().fieldErrors);
 
     if (!validatedResult.success) {
       throw new ValidationError(validatedResult.error.flatten().fieldErrors);

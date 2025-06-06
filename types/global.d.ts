@@ -49,6 +49,12 @@ declare global {
     createdAt: Date;
   }
 
+  interface Badges {
+    BRONZE: number;
+    SILVER: number;
+    GOLD: number;
+  }
+
   type ActionResponse<T = null> = {
     success: boolean;
     data?: T;

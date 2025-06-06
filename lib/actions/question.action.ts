@@ -2,6 +2,7 @@
 
 import mongoose, { FilterQuery } from "mongoose";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import ROUTES from "@/constants/routes";
 import { Answer, Collection, Vote } from "@/database";
@@ -19,6 +20,7 @@ import {
   IncrementViewsSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
+import { createInteraction } from "./interaction.action";
 
 export async function createQuestion(
   params: CreateQuestionParams,
@@ -75,6 +77,15 @@ export async function createQuestion(
       },
       { session },
     );
+
+    after(async () => {
+      await createInteraction({
+        action: "post",
+        actionTarget: "question",
+        actionId: question._id.toString(),
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 
@@ -133,13 +144,10 @@ export async function editQuestion(
 
     //const tagsToAdd2 = tags.filter((tag) => question.tags.every((t: ITagDoc) => t.name.toLowerCase().includes(tag.toLowerCase())))
 
-    console.log(tagsToAdd);
     const tagsToRemove = question.tags.filter(
       (tag: ITagDoc) =>
         !tags.some((t) => t.toLowerCase() === tag.name.toLowerCase()),
     );
-
-    console.log(tagsToRemove);
 
     //const tagsToRemove2 = question.tags.filter((tag: ITagDoc) => tags.every((t) => t.toLowerCase() !== tag.name.toLowerCase()));
 
@@ -191,6 +199,16 @@ export async function editQuestion(
     }
 
     await question.save({ session });
+
+    // after(async () => {
+    //   await createInteraction({
+    //     action: "edit",
+    //     actionId: questionId,
+    //     actionTarget: "question",
+    //     authorId: userId as string,
+    //   });
+    // });
+
     await session.commitTransaction();
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
@@ -345,7 +363,6 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
   const { questionId } = params;
   const userId = validationResult.session?.user?.id;
-  console.log(userId);
   const session = await mongoose.startSession();
 
   try {
@@ -354,8 +371,6 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     const question = await Question.findById(questionId);
 
     if (!question) throw new Error("Question Not Found");
-
-    console.log(question);
 
     if (userId !== question.author._id.toString())
       throw new Error("Unauthorized");
@@ -394,6 +409,15 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
     }
 
     await Question.findByIdAndDelete(questionId).session(session);
+
+    after(async () => {
+      await createInteraction({
+        action: "delete",
+        actionTarget: "question",
+        actionId: questionId,
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 

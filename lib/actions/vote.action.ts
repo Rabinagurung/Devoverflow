@@ -2,6 +2,7 @@
 
 import mongoose, { ClientSession } from "mongoose";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
@@ -13,6 +14,7 @@ import {
   HasVotedSchema,
   UpdateVoteCountSchema,
 } from "../validations";
+import { createInteraction } from "./interaction.action";
 
 export async function udpateVoteCount(
   params: UpdateVoteCountParams,
@@ -61,9 +63,7 @@ export async function createVote(
     return handleError(validationResult) as ErrorResponse;
 
   const { targetId, targetType, voteType } = validationResult.params!;
-  console.log({ targetId, targetType, voteType });
   const userId = validationResult.session?.user?.id;
-  console.log(userId);
 
   if (!userId) return handleError(new Error("Unauthorized")) as ErrorResponse;
 
@@ -71,6 +71,15 @@ export async function createVote(
   session.startTransaction();
 
   try {
+    const Model = targetType === "question" ? Question : Answer;
+    const contentDoc = await Model.findById(targetId).session(session);
+    if (!contentDoc)
+      throw new Error(
+        `${targetType === "question" ? "Question" : "Answer"} not found.`,
+      );
+
+    const contentAuthorId = contentDoc.author.toString();
+
     const existingVote = await Vote.findOne({
       author: userId,
       actionId: targetId,
@@ -80,6 +89,7 @@ export async function createVote(
     if (!existingVote) {
       // If the vote does not exist then create new vote
       // Update the upvotes or downvotes of Answer or Question model using updateVoteCount SA.
+
       await Vote.create(
         [
           {
@@ -141,6 +151,15 @@ export async function createVote(
         );
       }
     }
+
+    after(async () => {
+      await createInteraction({
+        action: voteType,
+        actionTarget: targetType,
+        actionId: targetId,
+        authorId: contentAuthorId,
+      });
+    });
 
     await session.commitTransaction();
 

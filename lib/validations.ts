@@ -247,3 +247,19 @@ export const DeleteAnswerSchema = z.object({
 export const GetUserTagsSchema = z.object({
   userId: z.string().min(1, { message: "User Id is required." }),
 });
+
+export const CreateInteractionSchema = z.object({
+  action: z.enum([
+    "view",
+    "post",
+    "upvote",
+    "downvote",
+    "edit",
+    "delete",
+    "bookmark",
+    "search",
+  ]),
+  actionId: z.string().min(1),
+  actionTarget: z.enum(["question", "answer"]),
+  authorId: z.string().min(1),
+});

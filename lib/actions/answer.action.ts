@@ -4,6 +4,7 @@ import { error } from "console";
 
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import ROUTES from "@/constants/routes";
 import { Question, Vote } from "@/database";
@@ -16,6 +17,7 @@ import {
   DeleteAnswerSchema,
   GetAnswersSchema,
 } from "../validations";
+import { createInteraction } from "./interaction.action";
 
 export async function createAnswer(
   params: CreateAnswerParams,
@@ -27,7 +29,6 @@ export async function createAnswer(
   });
 
   if (validationResult instanceof Error) {
-    console.log({ validationResult });
     return handleError(validationResult) as ErrorResponse;
   }
 
@@ -58,6 +59,15 @@ export async function createAnswer(
     question.answers += 1;
 
     await question.save({ session });
+
+    after(async () => {
+      await createInteraction({
+        action: "post",
+        actionTarget: "answer",
+        actionId: newAnswer._id.toString(),
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 
@@ -182,6 +192,15 @@ export async function deleteAnswer(
 
     // delete the answer
     await Answer.findByIdAndDelete(answerId).session(session);
+
+    after(async () => {
+      await createInteraction({
+        action: "delete",
+        actionTarget: "answer",
+        actionId: answerId,
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 

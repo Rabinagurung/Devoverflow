@@ -22,7 +22,6 @@ const Tags = async ({ searchParams }: RouteParams) => {
 
   const { tags, isNext } = data || {};
 
-  console.log(tags);
   return (
     <>
       <h1 className="h1-bold text-dark100_light900 text-3xl">Tags</h1>

@@ -19,6 +19,7 @@ import {
   getUser,
   getUserAnswers,
   getUserQuestions,
+  getUserStats,
   getUserTopTags,
 } from "@/lib/actions/user.action";
 
@@ -28,8 +29,8 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
 
   const loggedInUser = await auth();
 
-  const { success, data: user, error } = await getUser({ userId: id });
-  if (!success)
+  const { success, data: userData, error } = await getUser({ userId: id });
+  if (!success || !userData?.user)
     return (
       <div>
         <p>{error?.message}</p>
@@ -44,8 +45,13 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
     location = "SanFransico, California",
     portfolio = "http://localhost:3000",
     bio = "Launch your development career with project-based coaching - showcase your skills with practical development experience and land the coding career of your dreams. Check out jsmastery.pro",
+    reputation,
     createdAt,
-  } = user!;
+  } = userData!.user;
+
+  const { data: userStats } = await getUserStats({
+    userId: id,
+  });
 
   const {
     success: userQuestionsSuccess,
@@ -57,8 +63,6 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
     pageSize: Number(pageSize) || 1,
   });
 
-  console.log(userQuestions);
-
   const {
     success: userAnswersSuccess,
     data: userAnswers,
@@ -68,8 +72,6 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 1,
   });
-
-  console.log(userAnswers);
 
   const {
     success: userTopTagsSuccess,
@@ -82,8 +84,6 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
   const { questions, isNext: hasMoreQuestions } = userQuestions || {};
   const { answers, isNext: hasMoreAnswers } = userAnswers || {};
   const { tags } = userTopTags || {};
-
-  console.log(tags);
 
   return (
     <>
@@ -141,10 +141,10 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
         </div>
       </section>
       <Stats
-        totalQuestions={0}
-        totalAnswers={0}
-        badges={{ BRONZE: 0, SILVER: 0, GOLD: 0 }}
-        reputationPoints={0}
+        totalQuestions={userStats?.totalQuestions || 0}
+        totalAnswers={userStats?.totalAnswers || 0}
+        badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
+        reputationPoints={reputation || 0}
       />
 
       <section className="mt-10 flex gap-10">

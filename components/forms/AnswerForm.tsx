@@ -108,9 +108,6 @@ const AnswerForm = ({
         });
       }
 
-      console.log({ data });
-      console.log(typeof data);
-
       // const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
 
       const md = data

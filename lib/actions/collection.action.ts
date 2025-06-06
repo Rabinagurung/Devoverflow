@@ -31,15 +31,12 @@ export async function toggleSaveQuestion(
 
   try {
     const question = await Question.findById(questionId);
-    console.log(question);
     if (!question) throw new Error("Question not found");
 
     const collection = await Collection.findOne({
       author: userId,
       question: questionId,
     });
-
-    console.log({ collection });
 
     if (collection) {
       await Collection.findByIdAndDelete(collection._id);
@@ -52,6 +49,15 @@ export async function toggleSaveQuestion(
       question: questionId,
       author: userId,
     });
+
+    // after(async () => {
+    //   await createInteraction({
+    //     action: "bookmark",
+    //     actionTarget: "question",
+    //     actionId: questionId,
+    //     authorId: userId as string,
+    //   });
+    // });
 
     revalidatePath(ROUTES.QUESTION(questionId));
 
