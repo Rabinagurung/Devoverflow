@@ -7,6 +7,7 @@ import AnswerCard from "../cards/AnswerCard";
 import DataRenderer from "../DataRenderer";
 import CommonFilter from "../filter/CommonFilter";
 import Pagination from "../Pagination";
+
 interface Props extends ActionResponse<Answer[]> {
   totalAnswers: number;
   page: number;
@@ -21,8 +22,10 @@ const AllAnswers = ({
   error,
   totalAnswers,
 }: Props) => {
+  console.log({ page, isNext, success, data, error, totalAnswers });
+
   return (
-    <div className="mt-11 ">
+    <div className="mt-11">
       <div className="flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <h3 className="primary-text-gradient ">
           {totalAnswers} {totalAnswers > 1 ? "Answers" : "Answer"}
@@ -41,7 +44,6 @@ const AllAnswers = ({
           answers.map((answer) => <AnswerCard key={answer._id} {...answer} />)
         }
       />
-
       <Pagination page={page} isNext={isNext} />
     </div>
   );

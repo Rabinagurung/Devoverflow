@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
+// const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
   title: "Dev OverFlow",
   description:
     "Dev Overflow is a community-driven platform to ask and answer real-world programming questions. Learn, grow, and connect with developers around the world.",
@@ -88,9 +87,9 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport = {
-  // Optional: Theme color for browser UI and mobile experience
-  width: "device-width",
-  initialScale: 1,
-  themeColor: "#18181b",
-};
+// export const viewport = {
+//   // Optional: Theme color for browser UI and mobile experience
+//   width: "device-width",
+//   initialScale: 1,
+//   themeColor: "#18181b",
+// };

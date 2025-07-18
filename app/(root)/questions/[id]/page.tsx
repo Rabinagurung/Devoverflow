@@ -49,12 +49,13 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { page, pagesize, filter } = await searchParams;
 
   const { success, data: question } = await getQuestion({ questionId: id });
+  if (!success || !question) return redirect("/404");
+
+  console.log({ success, question });
 
   after(async () => {
     await incrementViews({ questionId: id });
   });
-
-  if (!success || !question) return redirect("/404");
 
   const {
     success: areAnswersLoaded,
@@ -155,7 +156,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
           textStyles="small-regular text-dark400_light700"
         />
       </div>
-      {/* <Preview content={content} /> */}
+      <Preview content={content} />
       <div className="flex flex-wrap gap-2 mt-8">
         {tags.map((tag: Tag) => (
           <TagCard

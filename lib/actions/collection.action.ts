@@ -4,7 +4,7 @@ import { PipelineStage } from "mongoose";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import ROUTES from "@/constants/routes";
 import { Collection, Question } from "@/database";
 
@@ -97,12 +97,11 @@ export async function hasSavedQuestion(
 
 export async function getAllSavedQuestions(
   params: PaginatedSearchParams,
-): Promise<ActionResponse<{
-  collection: Collection[];
-  isNext: boolean;
-}> | null> {
-  const session = await auth();
-  if (!session) return null;
+): Promise<ActionResponse<{ collection: Collection[]; isNext: boolean }>> {
+  // const session = await auth();
+  // if (!session) return {
+
+  // };
 
   const validationResult = await action({
     params,
