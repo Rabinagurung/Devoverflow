@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 import AuthForm from "@/components/forms/AuthForm";
@@ -8,12 +6,15 @@ import { SignUpSchema } from "@/lib/validations";
 
 const SignUp = () => {
   return (
-    <AuthForm
-      formType="SIGN_UP"
-      schema={SignUpSchema}
-      defaultValues={{ username: "", name: "", email: "", password: "" }}
-      onSubmit={signUpWithCredentials}
-    />
+    <div>
+      <h1>Sign Up Form</h1>
+      <AuthForm
+        formType="SIGN_UP"
+        schema={SignUpSchema}
+        defaultValues={{ username: "", name: "", email: "", password: "" }}
+        onSubmit={signUpWithCredentials}
+      />
+    </div>
   );
 };
 

@@ -84,7 +84,6 @@ const DataRenderer = <T,>({
   data,
   error,
   empty = DEFAULT_EMPTY,
-
   render,
 }: DataRendererProps<T>) => {
   if (!success) {

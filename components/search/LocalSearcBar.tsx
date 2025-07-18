@@ -31,7 +31,7 @@ const LocalSearchBar = ({
   const [searchQuery, setSearchQuery] = useState(query);
 
   useEffect(() => {
-    const delayDeboundFun = setTimeout(() => {
+    const delayDebounceFun = setTimeout(() => {
       if (searchQuery) {
         const newURl = formUrlQuery({
           params: searchParams.toString(),
@@ -40,51 +40,44 @@ const LocalSearchBar = ({
         });
 
         router.push(newURl, { scroll: false });
-      } else {
-        if (pathName === route) {
-          const newUrl = removeKeysFromUrlParams({
-            params: searchParams.toString(),
-            keysToRemove: ["query"],
-          });
+      } else if (pathName === route) {
+        const newUrl = removeKeysFromUrlParams({
+          params: searchParams.toString(),
+          keysToRemove: ["query"],
+        });
 
-          router.push(newUrl, { scroll: false });
-        }
+        router.push(newUrl, { scroll: false });
       }
-    }, 300);
+    }, 500);
 
-    return () => clearTimeout(delayDeboundFun);
+    return () => clearTimeout(delayDebounceFun);
   }, [router, searchQuery, route, searchParams, pathName]);
+
+  const renderIcon = (position: "left" | "right") => (
+    <Image
+      alt="Search"
+      src={imgSrc}
+      height={position === "left" ? 24 : 15}
+      width={position === "left" ? 24 : 15}
+      className="cursor-pointer"
+    />
+  );
 
   return (
     <div
-      className={`flex-center flex-1 background-light800_darkgradient min-h-[56px] grow gap-4 rounded-[10px] px-4 
+      className={`flex items-center flex-1 background-light800_darkgradient min-h-[56px] grow gap-4 rounded-[10px] px-4 
     ${otherClasses}`}
     >
-      {iconPosition === "left" && (
-        <Image
-          alt="Search"
-          src={imgSrc}
-          height={24}
-          width={24}
-          className="cursor-pointer"
-        />
-      )}
+      {iconPosition === "left" && renderIcon("left")}
       <Input
         type="text"
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        aria-label="Search"
         className="line-clamp-1 text-light400_light500 no-focus paragraph-regular placeholder border-none shadow-none outline-none p-0"
       />
-      {iconPosition === "right" && (
-        <Image
-          alt="Search"
-          src={imgSrc}
-          height={15}
-          width={15}
-          className="cursor-pointer"
-        />
-      )}
+      {iconPosition === "right" && renderIcon("right")}
     </div>
   );
 };

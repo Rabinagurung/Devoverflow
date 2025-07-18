@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
@@ -17,6 +18,31 @@ import { hasSavedQuestion } from "@/lib/actions/collection.action";
 import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { getFormattedNumber, getTimeStamp } from "@/lib/utils";
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+
+  const { success, data: question } = await getQuestion({ questionId: id });
+
+  if (!success || !question) {
+    return {
+      title: "Question not found",
+      description: "This question does not exists",
+    };
+  }
+
+  return {
+    title: question.title,
+    description: question.content.slice(0, 100),
+    twitter: {
+      card: "summary_large_image",
+      title: question.title,
+      description: question.content.slice(0, 100),
+    },
+  };
+}
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
@@ -63,6 +89,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     downvotes,
   } = question;
 
+  // return <p>Question detail page</p>;
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -128,7 +155,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
           textStyles="small-regular text-dark400_light700"
         />
       </div>
-      <Preview content={content} />
+      {/* <Preview content={content} /> */}
       <div className="flex flex-wrap gap-2 mt-8">
         {tags.map((tag: Tag) => (
           <TagCard

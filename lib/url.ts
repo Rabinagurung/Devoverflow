@@ -3,7 +3,7 @@ import qs from "query-string";
 interface FormUrlQueryProps {
   params: string;
   key: string;
-  value: string;
+  value: string | null;
 }
 
 interface RemoveKeysFromUrlParams {
@@ -12,13 +12,18 @@ interface RemoveKeysFromUrlParams {
 }
 
 export function formUrlQuery({ params, key, value }: FormUrlQueryProps) {
-  const queryString = qs.parse(params);
-  queryString[key] = value;
+  const queryObject = qs.parse(params);
+
+  if (value === null) {
+    delete queryObject[key];
+  } else {
+    queryObject[key] = value;
+  }
 
   return qs.stringifyUrl(
     {
       url: window.location.pathname,
-      query: queryString,
+      query: queryObject,
     },
     { skipNull: true },
   );
@@ -28,19 +33,19 @@ export function removeKeysFromUrlParams({
   params,
   keysToRemove,
 }: RemoveKeysFromUrlParams) {
-  const queryString = qs.parse(params);
+  const queryObject = qs.parse(params);
 
   keysToRemove.forEach((key) => {
-    delete queryString[key];
+    delete queryObject[key];
   });
 
   return qs.stringifyUrl(
     {
       url: window.location.pathname,
-      query: queryString,
+      query: queryObject,
     },
     { skipNull: true },
   );
 }
 
-// stringyUrl converts parsed JS object (queryString) into string and creates new URL.
+// stringyUrl converts parsed JS object (queryObject) into string and creates new URL.

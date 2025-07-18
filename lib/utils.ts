@@ -118,4 +118,35 @@ export function assignBadges(params: {
   return badgeCounts;
 }
 
+export function processJobTitle(title: string | undefined | null): string {
+  if (title === undefined || title === null) return "No Job Title";
+
+  const words = title.split(" ");
+
+  const validWords = words.filter(
+    (word) =>
+      word !== undefined &&
+      word !== null &&
+      word.toLowerCase() !== "undefined" &&
+      word.toLowerCase() !== "null",
+  );
+
+  if (validWords.length === 0) return "No Job Title";
+
+  return validWords.join(" ");
+}
+
 // assignBadges() expects one argument: an object with a single property called criteria array
+
+export function fixMDXContent(content: string): string {
+  return (
+    content // Fix angle bracket URLs that MDX tries to parse as JSX components
+      // Converts: <https://example.com> → [https://example.com](https://example.com)
+      // This prevents "Unexpected character `/` before local name" errors
+      .replace(/<(https?:\/\/[^>]+)>/g, "[$1]($1)") // Clean up double-escaped forward slashes that can occur during content processing
+      // Converts: \/path\/to\/file → /path/to/file
+      // This ensures file paths and URLs display correctly
+
+      .replace(/\\\//g, "/")
+  );
+}

@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 
 import { UnauthorizedError, ValidationError } from "../http-error";
 import dbConnect from "../mongoose";
+import handleError from "./error";
 
 type ActionOptions<T> = {
   params?: T;
@@ -38,7 +39,13 @@ async function action<T>({
   if (authorize) {
     session = await auth();
 
-    if (!session) throw new UnauthorizedError();
+    if (!session) {
+      // const errDD = new UnauthorizedError();
+      return {
+        params,
+        session,
+      };
+    }
   }
 
   await dbConnect();

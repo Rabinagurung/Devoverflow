@@ -230,12 +230,13 @@ const QuestionForm = ({ question, isEdit = false }: QuestionEditParams) => {
         <div className="mt-16 flex justify-end">
           <Button
             type="submit"
+            disabled={isPending}
             className="primary-gradient paragraph-semibold w-fit rounded-2 px-4 py-3 !text-light-900"
           >
             {isPending ? (
               <>
                 <ReloadIcon className="mr-2 size-4 animate-spin" />
-                <span>Submitting</span>
+                Submitting...
               </>
             ) : (
               <>{isEdit ? "Edit" : "Ask a Question"}</>

@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import Link from "next/link";
-import React from "react";
 
 import { auth } from "@/auth";
 import AnswerCard from "@/components/cards/AnswerCard";
@@ -132,8 +131,8 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
           {loggedInUser?.user?.id === _id && (
-            <Link href={ROUTES.PROFILE(_id)}>
-              <Button className="btn-secondary paragraph-semibold text-dark300_light900 px-4 py-3 min-w-44 min-h-12 border light-border rounded-2 dark:border-none">
+            <Link href={ROUTES.EDITPROFILE}>
+              <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
                 Edit Profile
               </Button>
             </Link>
@@ -150,8 +149,12 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
       <section className="mt-10 flex gap-10">
         <Tabs defaultValue="topPosts" className="w-[400p]">
           <TabsList>
-            <TabsTrigger value="topPosts">Top Posts</TabsTrigger>
-            <TabsTrigger value="answers">Answers</TabsTrigger>
+            <TabsTrigger value="topPosts" className="tab cursor-pointer">
+              Top Posts
+            </TabsTrigger>
+            <TabsTrigger value="answers" className="tab  cursor-pointer">
+              Answers
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="topPosts">
             <DataRenderer

@@ -12,7 +12,6 @@ import { CreateInteractionSchema } from "../validations";
 export async function createInteraction(
   params: CreateInteractionParams,
 ): Promise<ActionResponse<IInteractionDoc>> {
-  console.log(params);
   const validationResult = await action({
     params,
     schema: CreateInteractionSchema,

@@ -12,10 +12,12 @@ const ProfileLink = ({ imageUrl, href, title }: ProfileLinkProps) => {
       <Image src={imageUrl} width={20} height={20} alt={title} />
       {href ? (
         <Link href={href}>
-          <p className="paragraph-medium">{href}</p>
+          <p className="paragraph-medium line-clamp-1 break-all">{href}</p>
         </Link>
       ) : (
-        <p className="paragraph-medium text-dark400_light700">{title}</p>
+        <p className="paragraph-medium text-dark400_light700 line-clamp-2 ">
+          {title}
+        </p>
       )}
     </div>
   );

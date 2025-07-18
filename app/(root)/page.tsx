@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import QuestionCard from "@/components/cards/QuestionCard";
@@ -12,16 +13,20 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.action";
 
-const Home = async ({ searchParams }: RouteParams) => {
-  // const session = await auth();
+export const metadata: Metadata = {
+  title: "Dev Overflow | Home",
+  description:
+    "Discover different programming questions and answers with recommendations from the community.",
+};
 
-  const { page, pageSize, query = "", filter = "" } = await searchParams;
+const Home = async ({ searchParams }: RouteParams) => {
+  const { page, pageSize, query, filter } = await searchParams;
 
   const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 1,
-    query: query || "",
-    filter: filter || "",
+    pageSize: Number(pageSize) || 10,
+    query,
+    filter,
   });
 
   const { questions, isNext } = data || {};

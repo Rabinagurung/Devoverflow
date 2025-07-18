@@ -15,7 +15,7 @@ export const sidebarLinks = [
     label: "Collections",
   },
   {
-    route: "/jobss",
+    route: "/jobs",
     imageURL: "/icons/suitcase.svg",
     label: "Find Jobs",
   },

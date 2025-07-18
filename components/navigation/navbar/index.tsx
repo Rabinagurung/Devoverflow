@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 import { auth } from "@/auth";
+import GlobalSearch from "@/components/search/GlobalSearch";
 import UserAvatar from "@/components/UserAvatar";
 
 import MobileNavigation from "./MobileNavigation";
@@ -24,7 +25,7 @@ const Navbar = async () => {
           Dev<span className="text-primary-500">OverFlow</span>
         </p>
       </Link>
-      <p>Global search bar</p>
+      <GlobalSearch />
       <div className="flex-between gap-5 ">
         <Theme />
         {session?.user?.id && (
