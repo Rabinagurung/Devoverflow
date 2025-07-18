@@ -8,7 +8,8 @@ import { IUserDoc } from "./database/user.model";
 import { api } from "./lib/handlers/api";
 import { SignInSchema } from "./lib/validations";
 
-// POST /api/auth/credntials { email, password}
+export const runtime = "nodejs";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub,
@@ -23,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const { data: existingAccount } = (await api.accounts.getByProvider(
           email,
-          password,
         )) as ActionResponse<IAccountDoc>;
 
         if (!existingAccount) return null;
@@ -33,6 +33,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         )) as ActionResponse<IUserDoc>;
 
         if (!existingUser) return null;
+
+        // const isValidPassword = await bycrpt.compare(
+        //   password,
+        //   existingAccount.password!,
+        // );
+
+        // if (!isValidPassword) return null;
 
         return {
           id: existingUser.id,

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Space_Grotesk as SpaceGrotesk, Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
@@ -6,7 +6,7 @@ import React, { ReactNode } from "react";
 
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
-import { metadata as md, viewport as vd } from "@/constants/metadata";
+import { metadata as md } from "@/constants/metadata";
 import ThemeProvider from "@/context/Theme";
 
 const inter = Inter({
@@ -23,7 +23,7 @@ const spaceGrotesk = SpaceGrotesk({
 });
 
 export const metadata: Metadata = md;
-export const viewport: Viewport = vd;
+// export const viewport: Viewport = vd;
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();

@@ -27,6 +27,19 @@ const AnswerCard = ({
   showActionBtns = false,
   showReadMore = false,
 }: AnswerCardProps) => {
+  console.log({
+    _id,
+    content,
+    author,
+    question,
+    createdAt,
+    upvotes,
+    downvotes,
+    containerClasses,
+    showActionBtns,
+    showReadMore,
+  });
+
   const hasVotedPromise = hasVoted({ targetId: _id, targetType: "answer" });
 
   return (

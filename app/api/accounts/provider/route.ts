@@ -1,14 +1,14 @@
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 import Account from "@/database/account.model";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
-import { AccountSchema, SignInSchema } from "@/lib/validations";
+import { AccountSchema } from "@/lib/validations";
 
 export async function POST(request: Request) {
-  const { providerAccountId, password } = await request.json();
+  const { providerAccountId } = await request.json();
 
   try {
     await dbConnect();
@@ -24,19 +24,19 @@ export async function POST(request: Request) {
 
     if (!account) throw new NotFoundError("Account");
 
-    if (password) {
-      const validatedData = SignInSchema.partial().safeParse({
-        email: providerAccountId,
-        password,
-      });
+    // if (password) {
+    //   const validatedData = SignInSchema.partial().safeParse({
+    //     email: providerAccountId,
+    //     password,
+    //   });
 
-      if (!validatedData.success)
-        throw new ValidationError(validatedData.error.flatten().fieldErrors);
+    //   if (!validatedData.success)
+    //     throw new ValidationError(validatedData.error.flatten().fieldErrors);
 
-      const isValidPassword = await bcrypt.compare(password, account.password!);
+    //   const isValidPassword = await bcrypt.compare(password, account.password!);
 
-      if (!isValidPassword) throw new Error("Invalid password!!!!!!");
-    }
+    //   if (!isValidPassword) throw new Error("Invalid password!!!!!!");
+    // }
 
     return NextResponse.json({ success: true, data: account }, { status: 200 });
   } catch (error) {

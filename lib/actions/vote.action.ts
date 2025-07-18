@@ -4,7 +4,7 @@ import mongoose, { ClientSession } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
 

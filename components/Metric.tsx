@@ -18,7 +18,7 @@ interface MetricProps {
 }
 
 const Metric = ({
-  imageUrl,
+  imageUrl = "/images/site-logo.svg",
   alt,
   value,
   href,
