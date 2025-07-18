@@ -155,7 +155,7 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
           textStyles="small-regular text-dark400_light700"
         />
       </div>
-      {/* <Preview content={content} /> */}
+      <Preview content={content} />
       <div className="flex flex-wrap gap-2 mt-8">
         {tags.map((tag: Tag) => (
           <TagCard

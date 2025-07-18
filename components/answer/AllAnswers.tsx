@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AnswerFilters } from "@/constants/filters";
 import { EMPTY_ANSWERS } from "@/constants/states";
 
@@ -29,7 +27,7 @@ const AllAnswers = ({
         </h3>
         <CommonFilter
           filters={AnswerFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px] "
+          otherClasses="min-h-[56px] sm:min-w-[170px] flex justify-content"
         />
       </div>
       <DataRenderer

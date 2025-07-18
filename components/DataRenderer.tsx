@@ -120,7 +120,7 @@ const DataRenderer = <T,>({
     );
   }
 
-  return <div>{render(data)}</div>;
+  return <div className="">{render(data)}</div>;
 };
 
 export default DataRenderer;
