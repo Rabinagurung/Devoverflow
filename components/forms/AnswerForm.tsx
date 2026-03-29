@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "../ui/form";
 
-const Editor = dynamic(() => import("@/components/editor"), {
+const Editor = dynamic(() => import("@/components/Editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
