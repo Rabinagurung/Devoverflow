@@ -97,13 +97,7 @@ export async function hasSavedQuestion(
 
 export async function getAllSavedQuestions(
   params: PaginatedSearchParams,
-): Promise<ActionResponse<{
-  collection: Collection[];
-  isNext: boolean;
-}> | null> {
-  const session = await auth();
-  if (!session) return null;
-
+): Promise<ActionResponse<{ collection: Collection[]; isNext: boolean }>> {
   const validationResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,

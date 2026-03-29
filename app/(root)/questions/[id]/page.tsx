@@ -89,7 +89,6 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     downvotes,
   } = question;
 
-  // return <p>Question detail page</p>;
   return (
     <>
       <div className="flex-start w-full flex-col">

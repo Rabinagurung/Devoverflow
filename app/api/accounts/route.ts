@@ -12,6 +12,7 @@ export async function GET() {
 
     const accounts = await Account.find();
 
+    console.log("here we are");
     return NextResponse.json(
       { success: true, data: accounts },
       { status: 200 },

@@ -24,6 +24,7 @@ interface CommonFilterProps {
   otherClasses?: string;
   containerClasses?: string;
 }
+
 const CommonFilter = ({
   filters,
   otherClasses = "",

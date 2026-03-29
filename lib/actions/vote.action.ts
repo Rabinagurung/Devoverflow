@@ -164,7 +164,7 @@ export async function createVote(
 
     await session.commitTransaction();
 
-    revalidatePath(ROUTES.QUESTION(targetId));
+    // revalidatePath(ROUTES.QUESTION(targetId));
 
     return { success: true };
   } catch (error) {
