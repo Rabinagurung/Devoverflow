@@ -1,3 +1,5 @@
+import { ZodError } from "zod";
+
 export class RequestError extends Error {
   statusCode: number;
   errors?: Record<string, string[]>;
@@ -17,7 +19,7 @@ export class RequestError extends Error {
 export class ValidationError extends RequestError {
   constructor(fieldErrors: Record<string, string[]>) {
     const message = ValidationError.formatFieldErrors(fieldErrors);
-    super(400, message, fieldErrors);
+    super(422, message, fieldErrors);
     this.name = "ValidationError";
     this.errors = fieldErrors;
   }

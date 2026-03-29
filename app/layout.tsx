@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk as SpaceGrotesk, Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
@@ -6,6 +6,7 @@ import React, { ReactNode } from "react";
 
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
+import { metadata as md, viewport as vd } from "@/constants/metadata";
 import ThemeProvider from "@/context/Theme";
 
 const inter = Inter({
@@ -21,14 +22,8 @@ const spaceGrotesk = SpaceGrotesk({
   variable: "--font-space-grotesk",
 });
 
-export const metadata: Metadata = {
-  title: "Dev Overflow",
-  description:
-    "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
-  icons: {
-    icon: "/images/site-logo.png",
-  },
-};
+export const metadata: Metadata = md;
+export const viewport: Viewport = vd;
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
@@ -65,5 +60,5 @@ export default RootLayout;
 
 /* Inter is variable font so we dont have to specify different font weights.
 antialiased - It will make the text, image, shapes smoother. 
-inter.classname - next.js creates className that reference the font file that is being self hosted.
+inter.classname - Next.js creates className that reference the font file that is being self hosted.
 */

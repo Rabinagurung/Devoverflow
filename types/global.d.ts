@@ -55,6 +55,24 @@ declare global {
     GOLD: number;
   }
 
+  interface Job {
+    id?: string;
+    employer_name?: string;
+    employer_logo?: string | undefined;
+    employer_website?: string;
+    job_employment_type?: string;
+    job_title?: string;
+    job_description?: string;
+    job_apply_link?: string;
+    job_city?: string;
+    job_state?: string;
+    job_country?: string;
+  }
+
+  interface Country {
+    name: { common: string };
+  }
+
   type ActionResponse<T = null> = {
     success: boolean;
     data?: T;
@@ -76,6 +94,12 @@ declare global {
   interface RouteParams {
     params: Promise<Record<string, string>>;
     searchParams: Promise<Record<string, string>>;
+  }
+
+  interface GlobalSearchedItem {
+    id: string;
+    type: "question" | "answer" | "user" | "tag";
+    title: string;
   }
 }
 

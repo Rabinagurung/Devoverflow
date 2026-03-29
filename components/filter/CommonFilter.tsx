@@ -24,6 +24,7 @@ interface CommonFilterProps {
   otherClasses?: string;
   containerClasses?: string;
 }
+
 const CommonFilter = ({
   filters,
   otherClasses = "",
@@ -36,7 +37,7 @@ const CommonFilter = ({
   const handleUpdateFilter = (value: string) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
-      key: "filter",
+      key: "filter", //location=India
       value,
     });
 

@@ -33,7 +33,7 @@ const AnswerCard = ({
     <article
       className={cn("light-border border-b py-10 relative ", containerClasses)}
     >
-      <span id={`answer-${_id}`} className="hash-span" />
+      {/* <span id={`answer-${_id}`} className="hash-span" /> */}
 
       {showActionBtns && (
         <div className="background-light800 flex-center absolute -right-2 -top-5 size-9 rounded-full">

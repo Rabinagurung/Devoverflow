@@ -9,15 +9,16 @@ interface MetricProps {
   alt: string;
   value: string | number;
   href?: string;
-  title: string;
+  title?: string;
   textStyles: string;
   imageUrlStyles?: string;
   titleStyles?: string;
   isAuthor?: boolean;
+  iconSize?: number;
 }
 
 const Metric = ({
-  imageUrl,
+  imageUrl = "/images/site-logo.svg",
   alt,
   value,
   href,
@@ -25,12 +26,13 @@ const Metric = ({
   textStyles,
   imageUrlStyles,
   titleStyles,
+  iconSize = 16,
 }: MetricProps) => {
   const metricContent = (
     <>
       <Image
-        width={16}
-        height={16}
+        width={iconSize}
+        height={iconSize}
         alt={alt}
         src={imageUrl}
         className={`rounded-full object-contain  ${imageUrlStyles}`}

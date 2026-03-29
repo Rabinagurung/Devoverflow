@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "../ui/form";
 
-const Editor = dynamic(() => import("@/components/editor"), {
+const Editor = dynamic(() => import("@/components/Editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
@@ -190,7 +190,6 @@ const AnswerForm = ({
               </FormItem>
             )}
           />
-
           <div className="mt-[30px] flex justify-end ">
             <Button
               type="submit"

@@ -41,7 +41,20 @@ export async function fetchHandler<T>(
     clearTimeout(id);
 
     if (!response.ok) {
-      throw new RequestError(response.status, `HTTP ERROR: ${response.status}`);
+      let payload: ActionResponse | undefined;
+      try {
+        payload = await response.json();
+      } catch {
+        throw new RequestError(
+          response.status,
+          `HTTP ERROR: ${response.status}`,
+        );
+      }
+
+      throw new RequestError(
+        response.status,
+        payload?.error?.message ?? "Unexpected error occured!",
+      );
     }
 
     return await response.json();

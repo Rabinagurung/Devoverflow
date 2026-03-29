@@ -4,6 +4,7 @@ import mongoose, { ClientSession } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
+import { auth } from "@/auth";
 import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
 
@@ -163,7 +164,7 @@ export async function createVote(
 
     await session.commitTransaction();
 
-    revalidatePath(ROUTES.QUESTION(targetId));
+    // revalidatePath(ROUTES.QUESTION(targetId));
 
     return { success: true };
   } catch (error) {
@@ -186,6 +187,15 @@ export async function hasVoted(
   if (validationResult instanceof Error)
     return handleError(validationResult) as ErrorResponse;
 
+  if (!validationResult.session) {
+    return {
+      success: false,
+      data: {
+        hasUpvoted: false,
+        hasDownvoted: false,
+      },
+    };
+  }
   const { targetId, targetType } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
 

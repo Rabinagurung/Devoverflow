@@ -4,6 +4,7 @@ import { PipelineStage } from "mongoose";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
+import { auth } from "@/auth";
 import ROUTES from "@/constants/routes";
 import { Collection, Question } from "@/database";
 
@@ -107,6 +108,15 @@ export async function getAllSavedQuestions(
     return handleError(validationResult) as ErrorResponse;
   }
 
+  if (!validationResult.session) {
+    return {
+      success: false,
+      data: {
+        collection: [],
+        isNext: false,
+      },
+    };
+  }
   const userId = validationResult.session?.user?.id;
 
   const { page = 1, pageSize = 10, query, filter } = params;

@@ -9,7 +9,6 @@ import User from "@/database/user.model";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { NotFoundError } from "../http-error";
 import { SignInSchema, SignUpSchema } from "../validations";
 
 export async function signUpWithCredentials(
@@ -77,25 +76,29 @@ export async function signInWithCredentials(
   const { email, password } = validatedResult.params!;
 
   try {
-    const existingUser = await User.findOne({ email });
+    // const existingUser = await User.findOne({ email });
 
-    if (!existingUser) throw new NotFoundError("User");
+    // if (!existingUser) throw new NotFoundError("User");
 
-    const existingAccount = await Account.findOne({
-      provider: "credentials",
-      providerAccountId: email,
+    // const existingAccount = await Account.findOne({
+    //   provider: "credentials",
+    //   providerAccountId: email,
+    // });
+
+    // if (!existingAccount) throw new NotFoundError("Account");
+
+    // const isMatchingPassword = await bcrypt.compare(
+    //   password,
+    //   existingAccount.password,
+    // );
+
+    // if (!isMatchingPassword) throw new Error("Password does not match");
+
+    const user = { email, password };
+    await signIn("credentials", {
+      user,
+      redirect: false,
     });
-
-    if (!existingAccount) throw new NotFoundError("Account");
-
-    const isMatchingPassword = await bcrypt.compare(
-      password,
-      existingAccount.password,
-    );
-
-    if (!isMatchingPassword) throw new Error("Password does not match");
-
-    await signIn("credentials", { email, password, redirect: false });
 
     return { success: true };
   } catch (error) {

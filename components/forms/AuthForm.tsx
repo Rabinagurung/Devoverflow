@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -162,6 +163,7 @@ const userSchema: ZodType<T> = z.object({
   email: z.string().email(),
   age: z.number().min(18),
 });
+
 Here:
 
 ZodType<T> ensures that userSchema is a valid schema for the User type.

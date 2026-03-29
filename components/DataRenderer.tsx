@@ -84,7 +84,6 @@ const DataRenderer = <T,>({
   data,
   error,
   empty = DEFAULT_EMPTY,
-
   render,
 }: DataRendererProps<T>) => {
   if (!success) {
@@ -121,7 +120,7 @@ const DataRenderer = <T,>({
     );
   }
 
-  return <div>{render(data)}</div>;
+  return <div className="">{render(data)}</div>;
 };
 
 export default DataRenderer;

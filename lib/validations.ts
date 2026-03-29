@@ -16,7 +16,7 @@ export const SignUpSchema = z.object({
   username: z
     .string()
     .min(3, { message: "Username must be at least 3 characters." })
-    .max(30, { message: "Password cannot exceed 30 characters." })
+    .max(30, { message: "Username cannot exceed 30 characters." })
     .regex(/^[a-zA-Z0-9_]+$/, {
       message: "Username can only contain letters, numbers, and underscores.",
     }),
@@ -70,20 +70,12 @@ export const AskAQuestionSchema = z.object({
 });
 
 export const UserSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "Name is required" })
-    .max(50, { message: "Name cannot exceed 50 characters." })
-    .regex(/^[a-zA-Z\s]+$/, {
-      message: "Name can only contain letters and spaces.",
-    }),
+  name: z.string().min(1, { message: "Name is required" }),
+
   username: z
     .string()
-    .min(3, { message: "Username must be at least 3 characters long" })
-    .max(30, { message: "Password cannot exceed 30 characters." })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores.",
-    }),
+    .min(3, { message: "Username must be at least 3 characters long" }),
+
   email: z
     .string()
     .min(1, { message: "Email is required" })
@@ -91,10 +83,13 @@ export const UserSchema = z.object({
 
   bio: z.string().optional(),
   image: z.string().url({ message: "Please provide a valid URL." }).optional(),
-  location: z.string().optional(),
+  location: z
+    .string()
+    .min(3, { message: "Please provide proper location" })
+    .optional(),
   portfolio: z
     .string()
-    .url({ message: "Please provide a valid URL." })
+    .url({ message: "Please provide a valid portfolio URL." })
     .optional(),
   reputation: z.number().optional(),
 });
@@ -262,4 +257,49 @@ export const CreateInteractionSchema = z.object({
   actionId: z.string().min(1),
   actionTarget: z.enum(["question", "answer"]),
   authorId: z.string().min(1),
+});
+
+export const GlobalSearchSchema = z.object({
+  query: z.string(),
+  type: z.string().nullable().optional(),
+});
+
+export const ProfileSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters." })
+    .max(130, { message: "Name cannot exceed 130 characters." }),
+
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters." })
+    .max(100, { message: "Username cannot exceed 100 characters." }),
+  portfolio: z
+    .string()
+    .url({ message: "Please provide valid portfolio URL." })
+    .optional()
+    .or(z.literal("")),
+  location: z.string().min(3, {
+    message: "Please provide a proper location (at least 3 characters). ",
+  }),
+  bio: z.string().min(3, {
+    message: "Bio must be at least 3 characters.",
+  }),
+});
+
+export const UpdateUserSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters." })
+    .max(130, { message: "Name cannot exceed 130 characters." }),
+
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters." })
+    .max(30, { message: "Username cannot exceed 30 characters." }),
+  portfolio: z.string().url({ message: "Please provide valid portfolio URL." }),
+  location: z.string().min(3, { message: "Please provide proper location." }),
+  bio: z.string().min(3, {
+    message: "Bio must be at least 3 characters.",
+  }),
 });
