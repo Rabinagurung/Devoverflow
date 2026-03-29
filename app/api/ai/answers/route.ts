@@ -9,8 +9,6 @@ import { AIAnswersSchema } from "@/lib/validations";
 export async function POST(req: Request) {
   const { question, content, userAnswer } = await req.json();
 
-  // console.log("We called API answers route");
-
   try {
     const validatedResult = AIAnswersSchema.safeParse({
       question,
@@ -18,14 +16,7 @@ export async function POST(req: Request) {
       userAnswer,
     });
 
-    console.log(validatedResult);
-
     if (!validatedResult.success) {
-      console.log(
-        "We have validation error",
-        validatedResult.error.flatten().fieldErrors,
-      );
-
       throw new ValidationError(validatedResult.error.flatten().fieldErrors);
     }
 

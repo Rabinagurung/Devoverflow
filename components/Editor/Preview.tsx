@@ -44,7 +44,6 @@ Code.theme = {
 };
 
 const Preview = ({ content = "" }: { content: string }) => {
-  console.log(content);
   // const formattedContent = content.replace(/\\/g, "").replace(/&#x20;/g, "");
 
   // First apply basic content cleaning

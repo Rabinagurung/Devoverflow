@@ -40,13 +40,6 @@ export async function fetchHandler<T>(
     const response = await fetch(url, config);
     clearTimeout(id);
 
-    // if (!response.ok) {
-    //   console.log("Here is error because response was not ok");
-    //   console.log(response);
-
-    //
-    // }
-
     if (!response.ok) {
       let payload: ActionResponse | undefined;
       try {
@@ -58,7 +51,6 @@ export async function fetchHandler<T>(
         );
       }
 
-      console.log(response.status);
       throw new RequestError(
         response.status,
         payload?.error?.message ?? "Unexpected error occured!",

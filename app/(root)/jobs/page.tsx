@@ -12,8 +12,6 @@ import {
 const Jobs = async ({ searchParams }: RouteParams) => {
   const { query, location, page } = await searchParams;
 
-  console.log(query, location, page);
-
   const userLocation = await fetchLocation();
 
   const jobs = await fetchJobs({
