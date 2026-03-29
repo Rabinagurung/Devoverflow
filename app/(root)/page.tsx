@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
@@ -72,6 +73,11 @@ const Home = async ({ searchParams }: RouteParams) => {
         }
       />
       <Pagination page={page} isNext={isNext || false} />
+      <Script
+        src="https://echo-web-eight-umber.vercel.app/embed.js"
+        data-organization-id={process.env.NEXT_PUBLIC_ORG_ID || ""}
+        strategy="lazyOnload"
+      />
     </>
   );
 };
