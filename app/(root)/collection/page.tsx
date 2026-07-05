@@ -43,7 +43,7 @@ const Collections = async ({ searchParams }: RouteParams) => {
         data={collection}
         empty={EMPTY_QUESTIONS}
         render={(collection: Collection[]) => (
-          <div className="mt-10 flex w-full flex-col gao-6">
+          <div className="mt-10 flex w-full flex-col gap-6">
             {collection.map((item) => (
               <QuestionCard key={item._id} question={item.question} />
             ))}

@@ -56,6 +56,7 @@ declare global {
   }
 
   interface Job {
+    job_id?: string;
     id?: string;
     employer_name?: string;
     employer_logo?: string | undefined;

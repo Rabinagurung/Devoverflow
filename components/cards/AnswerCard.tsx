@@ -1,11 +1,11 @@
 import Link from "next/link";
 import React, { Suspense } from "react";
 
+import Preview from "@/components/Editor/Preview";
 import ROUTES from "@/constants/routes";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { cn, getTimeStamp } from "@/lib/utils";
 
-import Preview from "../editor/Preview";
 import EditDeleteAction from "../user/EditDeleteAction";
 import UserAvatar from "../UserAvatar";
 import Votes from "../votes/Votes";

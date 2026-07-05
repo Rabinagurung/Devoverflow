@@ -4,7 +4,6 @@ import mongoose, { ClientSession } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
-import { auth } from "@/auth";
 import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
 
@@ -164,7 +163,7 @@ export async function createVote(
 
     await session.commitTransaction();
 
-    // revalidatePath(ROUTES.QUESTION(targetId));
+    revalidatePath(ROUTES.QUESTION(targetId));
 
     return { success: true };
   } catch (error) {

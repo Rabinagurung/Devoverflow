@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 import { processJobTitle } from "@/lib/utils";
 
@@ -23,13 +25,22 @@ const JobLocation = ({
 }: JobLocationProps) => {
   return (
     <div className="flex items-center justify-end gap-2 rounded-2xl px-3 py-1.5 background-light800_dark400">
-      <Image
-        src={`https://flagsapi.com/${job_country}/flat/64.png`}
-        alt="country symbol"
-        width={16}
-        height={16}
-        className="rounded-full"
-      />
+      {job_country ? (
+        <Image
+          src={`https://flagsapi.com/${job_country}/flat/64.png`}
+          alt="country symbol"
+          width={16}
+          height={16}
+          className="rounded-full"
+        />
+      ) : (
+        <Image
+          src="/icons/location.svg"
+          alt="location"
+          width={16}
+          height={16}
+        />
+      )}
 
       <p className="body-medium text-dark-400_light700">
         {job_city && `${job_city}, `}
@@ -39,6 +50,8 @@ const JobLocation = ({
     </div>
   );
 };
+const DEFAULT_LOGO = "/images/site-logo.svg";
+
 const JobCard = ({ job }: JobCardProps) => {
   const {
     employer_logo,
@@ -52,6 +65,9 @@ const JobCard = ({ job }: JobCardProps) => {
     job_country,
   } = job;
 
+  const [logoSrc, setLogoSrc] = useState(employer_logo || DEFAULT_LOGO);
+  const hasValidLogo = logoSrc !== DEFAULT_LOGO;
+
   return (
     <section className="flex flex-col items-start gap-6 rounded-lg p-6 sm:p-8 sm:flex-row light-border border background-light900_dark200 light-border shadow-light100_darknone">
       <div className="flex w-full justify-end sm:hidden">
@@ -63,21 +79,22 @@ const JobCard = ({ job }: JobCardProps) => {
       </div>
 
       <div className="flex items-center gap-6">
-        {employer_logo ? (
+        {hasValidLogo ? (
           <Link
             href={employer_website ?? "/jobs"}
             className="background-light800_dark400 relative size-16 rounded-xl "
           >
-            <Image
-              src={employer_logo}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logoSrc}
               alt="company logo"
-              fill
               className="size-full object-contain p-2"
+              onError={() => setLogoSrc(DEFAULT_LOGO)}
             />
           </Link>
         ) : (
           <Image
-            src="images/site-logo.svg"
+            src={DEFAULT_LOGO}
             alt="default site logo"
             width={50}
             height={50}

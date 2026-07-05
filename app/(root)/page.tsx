@@ -76,6 +76,7 @@ const Home = async ({ searchParams }: RouteParams) => {
       <Script
         src="https://echo-web-eight-umber.vercel.app/embed.js"
         data-organization-id={process.env.NEXT_PUBLIC_ORG_ID || ""}
+        data-primary-color="#FF7000"
         strategy="lazyOnload"
       />
     </>

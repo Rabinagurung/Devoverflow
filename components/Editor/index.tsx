@@ -76,6 +76,7 @@ const Editor = ({ value, editorRef, fieldChange }: Props) => {
             bash: "bash",
             json: "json",
             js: "javascript",
+            python: "python",
             ts: "typescript",
             "": "unspecified",
             tsx: "TypeScript (React)",
