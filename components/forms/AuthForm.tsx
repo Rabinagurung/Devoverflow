@@ -7,10 +7,11 @@ import {
   DefaultValues,
   FieldValues,
   Path,
+  Resolver,
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { z, ZodType } from "zod";
+import { z } from "zod";
 
 import ROUTES from "@/constants/routes";
 import { toast } from "@/hooks/use-toast";
@@ -27,7 +28,7 @@ import {
 import { Input } from "../ui/input";
 
 interface AuthFormProps<T extends FieldValues> {
-  schema: ZodType<T>;
+  schema: z.ZodType<T, T>;
   defaultValues: T;
   formType: "SIGN_IN" | "SIGN_UP";
   onSubmit: (data: T) => Promise<ActionResponse>;
@@ -46,8 +47,8 @@ const AuthForm = <T extends FieldValues>({
 }: AuthFormProps<T>) => {
   const router = useRouter();
   // Initialize RHF and prepare to track fields dynamically
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<T>({
+    resolver: zodResolver(schema) as Resolver<T>,
     defaultValues: defaultValues as DefaultValues<T>,
   });
 

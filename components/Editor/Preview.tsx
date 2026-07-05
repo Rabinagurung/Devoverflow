@@ -66,6 +66,7 @@ const Preview = ({ content = "" }: { content: string }) => {
         source={formattedContent}
         options={{
           mdxOptions: {
+            format: "md",
             remarkPlugins: [remarkGfm],
           },
         }}

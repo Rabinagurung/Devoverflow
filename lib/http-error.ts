@@ -1,5 +1,3 @@
-import { ZodError } from "zod";
-
 export class RequestError extends Error {
   statusCode: number;
   errors?: Record<string, string[]>;
