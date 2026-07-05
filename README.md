@@ -2,6 +2,8 @@
 
 A full-stack Q&A platform inspired by Stack Overflow, built with Next.js. Developers can ask questions, post answers, vote on content, and get AI-generated answers — all in a clean, modern interface.
 
+**Live demo:** [devoverflowpro.vercel.app](https://devoverflowpro.vercel.app/)
+
 ## Features
 
 - Ask and answer technical questions
@@ -35,8 +37,8 @@ A full-stack Q&A platform inspired by Stack Overflow, built with Next.js. Develo
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Rabinagurung/jsmasterypro_devflow.git
-cd jsmasterypro_devflow
+git clone git@github.com:Rabinagurung/Devoverflow.git
+cd Devoverflow
 ```
 
 2. Install dependencies:
