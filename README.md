@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevOverflow
+
+A full-stack Q&A platform inspired by Stack Overflow, built with Next.js. Developers can ask questions, post answers, vote on content, and get AI-generated answers — all in a clean, modern interface.
+
+## Features
+
+- Ask and answer technical questions
+- Vote on questions and answers
+- Tag-based filtering and search
+- AI-powered answer generation (OpenAI, DeepSeek, Groq)
+- GitHub and Google OAuth authentication
+- MDX-powered rich text editor
+- Dark/light mode
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Database:** MongoDB with Mongoose
+- **Auth:** NextAuth.js (GitHub & Google OAuth)
+- **AI:** Vercel AI SDK with OpenAI, DeepSeek, and Groq
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Forms:** React Hook Form + Zod
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- A MongoDB instance (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
+- GitHub OAuth app credentials
+- Google OAuth app credentials
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Rabinagurung/jsmasterypro_devflow.git
+cd jsmasterypro_devflow
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env.local` file in the root of the project and add the required environment variables (see below).
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file in the project root with the following variables:
 
-## Learn More
+```env
+# NextAuth
+AUTH_SECRET=
+AUTH_TRUST_HOST=
 
-To learn more about Next.js, take a look at the following resources:
+# Google OAuth
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# GitHub OAuth
+AUTH_GITHUB_ID=
+AUTH_GITHUB_SECRET=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# MongoDB
+MONGODB_URI=
 
-## Deploy on Vercel
+# App URLs
+NEXT_PUBLIC_API_BASE_URL=
+NEXT_PUBLIC_SITE_URL=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Clerk (if used)
+NEXT_PUBLIC_ORG_ID=
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# RapidAPI
+RAPID_API_KEY=
+
+# AI Providers
+OPENAI_API_KEY=
+DEEPSEEK_API_KEY=
+GROQ_API_KEY=
+```
+
+| Variable | Description |
+|---|---|
+| `AUTH_SECRET` | Random secret for NextAuth — generate with `openssl rand -base64 32` |
+| `AUTH_TRUST_HOST` | Set to `true` when running behind a proxy or on Vercel |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | From [Google Cloud Console](https://console.cloud.google.com/) OAuth credentials |
+| `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET` | From [GitHub Developer Settings](https://github.com/settings/developers) OAuth app |
+| `MONGODB_URI` | MongoDB connection string (e.g. `mongodb+srv://...`) |
+| `NEXT_PUBLIC_API_BASE_URL` | Base URL for internal API calls (e.g. `http://localhost:3000`) |
+| `NEXT_PUBLIC_SITE_URL` | Public URL of the site |
+| `RAPID_API_KEY` | API key for the JSearch job-listings API from [RapidAPI](https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch) |
+| `OPENAI_API_KEY` | From [OpenAI Platform](https://platform.openai.com/) |
+| `DEEPSEEK_API_KEY` | From [DeepSeek Platform](https://platform.deepseek.com/) |
+| `GROQ_API_KEY` | From [Groq Console](https://console.groq.com/) |
+
+## Deploy
+
+The easiest way to deploy is with [Vercel](https://vercel.com/). Add all environment variables in the Vercel project settings.
