@@ -1,16 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import React from "react";
 
 import ROUTES from "@/constants/routes";
 import { toast } from "@/hooks/use-toast";
+import { signInAsGuest } from "@/lib/actions/auth.action";
 import logger from "@/lib/logger";
 
 import { Button } from "../ui/button";
 
 const SocialAuthForm = () => {
+  const router = useRouter();
   const buttonClass =
     "background-light900_dark400 text-dark200_light800 min-h-12 rounded-2 flex-1 py-4 px-3.5 ";
 
@@ -30,6 +33,20 @@ const SocialAuthForm = () => {
           error instanceof Error
             ? error.message
             : "An error occured during sign-in",
+      });
+    }
+  };
+
+  const handleGuestSignIn = async () => {
+    const result = await signInAsGuest();
+
+    if (result?.success) {
+      router.push(ROUTES.HOME);
+    } else {
+      toast({
+        title: "Sign-in Failed",
+        variant: "destructive",
+        description: result?.error?.message ?? "Could not start guest session",
       });
     }
   };
@@ -56,6 +73,10 @@ const SocialAuthForm = () => {
           className="mr-2.5 object-contain"
         />
         <span>Login with Google</span>
+      </Button>
+
+      <Button className={buttonClass} onClick={handleGuestSignIn}>
+        <span>Continue as Guest</span>
       </Button>
     </div>
   );

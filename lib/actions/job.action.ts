@@ -6,17 +6,28 @@ export const fetchLocation = async () => {
   return location.country;
 };
 
-export const fetchCountries = async () => {
+export const fetchCountries = async (): Promise<Country[]> => {
   try {
     const response = await fetch(
-      "https://restcountries.com/v3.1/all?fields=name",
+      "https://countriesnow.space/api/v0.1/countries/positions",
     );
 
     const result = await response.json();
 
-    return result;
+    if (!Array.isArray(result?.data)) return [];
+
+    return result.data.filter(
+      (entry: unknown): entry is Country =>
+        typeof entry === "object" &&
+        entry !== null &&
+        typeof (entry as Country).name === "string" &&
+        (entry as Country).name.trim().length > 0 &&
+        typeof (entry as Country).iso2 === "string" &&
+        (entry as Country).iso2.trim().length > 0,
+    );
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 

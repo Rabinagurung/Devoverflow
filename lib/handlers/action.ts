@@ -5,7 +5,11 @@ import { ZodError, ZodSchema } from "zod";
 
 import { auth } from "@/auth";
 
-import { UnauthorizedError, ValidationError } from "../http-error";
+import {
+  ForbiddenError,
+  UnauthorizedError,
+  ValidationError,
+} from "../http-error";
 import dbConnect from "../mongoose";
 
 type ActionOptions<T> = {
@@ -40,6 +44,12 @@ async function action<T>({
 
     if (!session) {
       return new UnauthorizedError();
+    }
+
+    if (session.user?.isGuest) {
+      return new ForbiddenError(
+        "Guests can't do that. Sign in or create a free account to continue.",
+      );
     }
   }
 

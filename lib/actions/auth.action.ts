@@ -65,6 +65,26 @@ export async function signUpWithCredentials(
   }
 }
 
+export async function signInAsGuest(): Promise<ActionResponse> {
+  try {
+    const redirectUrl = await signIn("guest", { redirect: false });
+
+    const errorCode = redirectUrl
+      ? new URL(redirectUrl, "http://localhost").searchParams.get("error")
+      : null;
+
+    if (errorCode) {
+      return handleError(
+        new Error("Guest sign-in failed. Please try again."),
+      ) as ErrorResponse;
+    }
+
+    return { success: true };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
 export async function signInWithCredentials(
   params: Pick<AuthCredentials, "email" | "password">,
 ): Promise<ActionResponse> {
