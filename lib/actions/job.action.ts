@@ -14,7 +14,17 @@ export const fetchCountries = async (): Promise<Country[]> => {
 
     const result = await response.json();
 
-    return Array.isArray(result?.data) ? result.data : [];
+    if (!Array.isArray(result?.data)) return [];
+
+    return result.data.filter(
+      (entry: unknown): entry is Country =>
+        typeof entry === "object" &&
+        entry !== null &&
+        typeof (entry as Country).name === "string" &&
+        (entry as Country).name.trim().length > 0 &&
+        typeof (entry as Country).iso2 === "string" &&
+        (entry as Country).iso2.trim().length > 0,
+    );
   } catch (error) {
     console.log(error);
     return [];
