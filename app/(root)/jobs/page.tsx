@@ -12,16 +12,19 @@ import {
 const Jobs = async ({ searchParams }: RouteParams) => {
   const { query, location, page } = await searchParams;
 
-  const userLocation = await fetchLocation();
+  const [searchQuery, countriesList] = await Promise.all([
+    query
+      ? Promise.resolve(`${query} ${location ? `, ${location}` : ""}`)
+      : fetchLocation().then(
+          (userLocation) => `Software Enginner in ${userLocation}`,
+        ),
+    fetchCountries(),
+  ]);
 
   const jobs = await fetchJobs({
-    query: query
-      ? `${query} ${location ? `, ${location}` : ""}`
-      : `Software Enginner in ${userLocation}`,
+    query: searchQuery,
     page: page ?? 1,
   });
-
-  const countriesList = await fetchCountries();
 
   return (
     <>
