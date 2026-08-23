@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
+import GuestSignInButton from "@/components/forms/GuestSignInButton";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 
@@ -79,28 +80,19 @@ const LeftSideBar = async () => {
               </Link>
             </Button>
 
-            <form
-              action={async () => {
-                "use server";
-
-                await signIn("guest", { redirectTo: ROUTES.HOME });
-              }}
-            >
-              <Button
-                type="submit"
-                className="light-border-2 body-semibold text-dark400_light900 btn-tertiary min-h-[42px] w-full rounded-lg
+            <GuestSignInButton
+              className="light-border-2 body-semibold text-dark400_light900 btn-tertiary min-h-[42px] w-full rounded-lg
             border px-4 py-3 shadow-none"
-              >
-                <Image
-                  src="/icons/users.svg"
-                  height={20}
-                  width={20}
-                  alt="Guest image"
-                  className="invert-colors lg:hidden"
-                />
-                <span className="max-lg:hidden">Continue as Guest</span>
-              </Button>
-            </form>
+            >
+              <Image
+                src="/icons/users.svg"
+                height={20}
+                width={20}
+                alt="Guest image"
+                className="invert-colors lg:hidden"
+              />
+              <span className="max-lg:hidden">Continue as Guest</span>
+            </GuestSignInButton>
           </>
         )}
       </div>

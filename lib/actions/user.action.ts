@@ -6,6 +6,7 @@ import { Answer, Question, User } from "@/database";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import { NotFoundError } from "../http-error";
 import { assignBadges } from "../utils";
 import {
   GetUserAnswersSchema,
@@ -91,9 +92,11 @@ export async function getUser(
   const { userId } = params;
 
   try {
+    if (!Types.ObjectId.isValid(userId)) throw new NotFoundError("User");
+
     const user = await User.findById(userId);
 
-    if (!user) throw new Error("User Not Found.");
+    if (!user) throw new NotFoundError("User");
 
     return { success: true, data: { user: JSON.parse(JSON.stringify(user)) } };
   } catch (error) {

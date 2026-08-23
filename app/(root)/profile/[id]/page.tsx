@@ -6,6 +6,7 @@ import AnswerCard from "@/components/cards/AnswerCard";
 import QuestionCard from "@/components/cards/QuestionCard";
 import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/DataRenderer";
+import GuestAccessNotice from "@/components/GuestAccessNotice";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,12 +30,21 @@ const ProfileDetails = async ({ params, searchParams }: RouteParams) => {
   const loggedInUser = await auth();
 
   const { success, data: userData, error } = await getUser({ userId: id });
-  if (!success || !userData?.user)
+  if (!success || !userData?.user) {
+    if (loggedInUser?.user?.isGuest && loggedInUser.user.id === id) {
+      return (
+        <GuestAccessNotice message="Guests don't have a profile. Sign in or create a free account to build yours." />
+      );
+    }
+
     return (
-      <div>
-        <p>{error?.message}</p>
+      <div className="light-border background-light800_dark300 rounded-2 border p-6">
+        <p className="paragraph-regular text-dark400_light700">
+          {error?.message}
+        </p>
       </div>
     );
+  }
 
   const {
     _id,
