@@ -8,11 +8,29 @@ import { IUserDoc } from "./database/user.model";
 import { api } from "./lib/handlers/api";
 import { SignInSchema } from "./lib/validations";
 
+// Guests get a short-lived, DB-less identity so recruiters can browse
+// without leaving an account behind to clean up or revoke.
+const GUEST_SESSION_MAX_AGE_MS = 2 * 60 * 60 * 1000; // 2 hours
+
 // POST /api/auth/credntials { email, password}
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub,
     Google,
+    Credentials({
+      id: "guest",
+      name: "Guest",
+      credentials: {},
+      async authorize() {
+        return {
+          id: `guest-${crypto.randomUUID()}`,
+          name: "Guest Recruiter",
+          email: null,
+          image: null,
+          isGuest: true,
+        };
+      },
+    }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = SignInSchema.safeParse(credentials);
@@ -47,11 +65,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async session({ session, token }) {
       session.user.id = token.sub as string;
+      session.user.isGuest = token.isGuest;
 
       return session;
     },
 
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
+      // Guest identities are never written to the DB: skip the account
+      // lookup entirely and stamp a short, self-enforced expiry instead.
+      if (account?.provider === "guest") {
+        token.sub = user!.id;
+        token.isGuest = true;
+        token.guestExpiresAt = Date.now() + GUEST_SESSION_MAX_AGE_MS;
+
+        return token;
+      }
+
+      if (
+        token.isGuest &&
+        token.guestExpiresAt &&
+        Date.now() > token.guestExpiresAt
+      ) {
+        return null;
+      }
+
       if (account) {
         const { success, data: existingAccount } =
           (await api.accounts.getByProvider(
@@ -65,6 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const userId = existingAccount.userId;
 
         if (userId) token.sub = userId.toString();
+        token.isGuest = false;
       }
 
       return token;

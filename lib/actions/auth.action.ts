@@ -65,6 +65,16 @@ export async function signUpWithCredentials(
   }
 }
 
+export async function signInAsGuest(): Promise<ActionResponse> {
+  try {
+    await signIn("guest", { redirect: false });
+
+    return { success: true };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
 export async function signInWithCredentials(
   params: Pick<AuthCredentials, "email" | "password">,
 ): Promise<ActionResponse> {

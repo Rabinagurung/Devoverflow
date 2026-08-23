@@ -57,14 +57,14 @@ const JobsFilter = ({ countriesList }: JobsFilterProps) => {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {countriesList ? (
+            {Array.isArray(countriesList) && countriesList.length > 0 ? (
               countriesList.map((country: Country) => (
                 <SelectItem
-                  key={country.name.common}
-                  value={country.name.common}
+                  key={country.iso2}
+                  value={country.name}
                   className="px-4 py-3"
                 >
-                  {country.name.common}
+                  {country.name}
                 </SelectItem>
               ))
             ) : (

@@ -71,7 +71,8 @@ declare global {
   }
 
   interface Country {
-    name: { common: string };
+    name: string;
+    iso2: string;
   }
 
   type ActionResponse<T = null> = {

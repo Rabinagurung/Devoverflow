@@ -6,17 +6,18 @@ export const fetchLocation = async () => {
   return location.country;
 };
 
-export const fetchCountries = async () => {
+export const fetchCountries = async (): Promise<Country[]> => {
   try {
     const response = await fetch(
-      "https://restcountries.com/v3.1/all?fields=name",
+      "https://countriesnow.space/api/v0.1/countries/positions",
     );
 
     const result = await response.json();
 
-    return result;
+    return Array.isArray(result?.data) ? result.data : [];
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 
