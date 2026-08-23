@@ -5,11 +5,13 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import ROUTES from "@/constants/routes";
 import { toast } from "@/hooks/use-toast";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { api } from "@/lib/handlers/api";
@@ -82,7 +84,7 @@ const AnswerForm = ({
   }
 
   const generateAIAnswer = async () => {
-    if (session.status !== "authenticated") {
+    if (session.status !== "authenticated" || session.data?.user?.isGuest) {
       return toast({
         title: "Please log in",
         description: "You need to be logged in to use this feature",
@@ -169,45 +171,68 @@ const AnswerForm = ({
           )}
         </Button>
       </div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmitHandler)}
-          className="mt-6 flex w-full flex-col gap-10"
-        >
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-3">
-                <FormControl>
-                  <Editor
-                    value={field.value}
-                    editorRef={editorRef}
-                    fieldChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="mt-[30px] flex justify-end ">
+      {session.data?.user?.isGuest ? (
+        <div className="light-border background-light800_dark300 mt-6 flex flex-col items-start gap-4 rounded-2 border p-6">
+          <p className="paragraph-regular text-dark400_light700">
+            Guests can read answers but can&apos;t post their own. Sign in or
+            create a free account to join the discussion.
+          </p>
+          <div className="flex gap-3">
             <Button
-              type="submit"
-              className="primary-gradient px-3 py-4  w-fit
-               rounded-2 paragraph-semibold text-light-900 dark:text-light-900"
+              className="primary-gradient paragraph-medium rounded-2 px-4 py-3 !text-light-900"
+              asChild
             >
-              {isAnswering ? (
-                <>
-                  <ReloadIcon className="mr-2 size-4 animate-spin" />
-                  Posting...
-                </>
-              ) : (
-                "Post Answer"
-              )}
+              <Link href={ROUTES.SIGN_IN}>Sign In</Link>
+            </Button>
+            <Button
+              className="light-border-2 body-semibold text-dark400_light900 btn-tertiary rounded-2 border px-4 py-3"
+              asChild
+            >
+              <Link href={ROUTES.SIGN_UP}>Create Account</Link>
             </Button>
           </div>
-        </form>
-      </Form>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmitHandler)}
+            className="mt-6 flex w-full flex-col gap-10"
+          >
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem className="flex w-full flex-col gap-3">
+                  <FormControl>
+                    <Editor
+                      value={field.value}
+                      editorRef={editorRef}
+                      fieldChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="mt-[30px] flex justify-end ">
+              <Button
+                type="submit"
+                className="primary-gradient px-3 py-4  w-fit
+               rounded-2 paragraph-semibold text-light-900 dark:text-light-900"
+              >
+                {isAnswering ? (
+                  <>
+                    <ReloadIcon className="mr-2 size-4 animate-spin" />
+                    Posting...
+                  </>
+                ) : (
+                  "Post Answer"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
     </div>
   );
 };

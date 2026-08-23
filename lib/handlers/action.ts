@@ -48,7 +48,7 @@ async function action<T>({
 
     if (session.user?.isGuest) {
       return new ForbiddenError(
-        "Guests cannot perform this action. Please sign in to continue.",
+        "Guests can't do that. Sign in or create a free account to continue.",
       );
     }
   }
